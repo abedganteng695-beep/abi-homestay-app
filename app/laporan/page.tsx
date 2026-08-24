@@ -17,6 +17,7 @@ interface Transaction {
   amount: number;
   paymentMethod: string;
   rentType: string | null;
+  description: string | null;
   proofUrl: string | null;
   date: Date;
   tenant?: Tenant | null;
@@ -222,7 +223,9 @@ export default function LaporanPage() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-label-sm text-outline">Tipe</span>
-                          <span className="text-label-sm font-medium">{tx.rentType || "Sewa Bulanan"}</span>
+                          <span className="text-label-sm font-medium">
+                            {tx.type === "EXPENSE" ? tx.description : tx.rentType || "Sewa Bulanan"}
+                          </span>
                         </div>
                       </div>
                       <a

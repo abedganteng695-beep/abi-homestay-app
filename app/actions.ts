@@ -260,13 +260,19 @@ export async function addTransaction(formData: FormData) {
   try {
     const tenantId = (formData.get("tenantId") as string) || "";
     const type = (formData.get("type") as any) || "INCOME";
-    const rentType = (formData.get("rentType") as any) || "MONTHLY";
-    const amountRaw = (formData.get("amount") as string) || "0";
+    const rawRentType = formData.get("rentType") as string;
+    let rentType = null;
+    let description = null;
 
-    // Clean currency dots & commas (e.g. "2.500.000" -> 2500000)
+    if (type === "EXPENSE") {
+      description = rawRentType;
+    } else {
+      rentType = (rawRentType || "MONTHLY") as any;
+    }
+
+    const amountRaw = (formData.get("amount") as string) || "0";
     const amountCleaned = amountRaw.replace(/[^0-9]/g, "");
     const amount = parseFloat(amountCleaned) || 0;
-
     const file = formData.get("file") as File | null;
 
     let proofUrl = null;
@@ -298,6 +304,7 @@ export async function addTransaction(formData: FormData) {
         tenantId: tenantId || null,
         roomId: roomId,
         rentType,
+        description,
         amount,
         paymentMethod: "TRANSFER",
         proofUrl,
