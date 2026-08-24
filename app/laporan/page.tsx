@@ -70,7 +70,14 @@ export default function LaporanPage() {
     formData.append("tenantId", selectedTenantId);
     formData.append("rentType", paymentType);
     formData.append("amount", amount);
+    
     if (selectedFile) {
+      // Vercel Serverless functions have a hard limit of 4.5MB payload size.
+      // We must validate this client-side otherwise Vercel throws a hard 500 error.
+      if (selectedFile.size > 4 * 1024 * 1024) {
+        alert("Maaf, ukuran gambar terlalu besar (Maksimal 4MB). Silakan kompres atau pilih gambar lain.");
+        return;
+      }
       formData.append("file", selectedFile);
     }
 
@@ -374,7 +381,7 @@ export default function LaporanPage() {
                   <p className="text-body-md font-semibold text-on-surface">
                     {selectedFile ? selectedFile.name : "Tap untuk upload gambar"}
                   </p>
-                  <p className="text-label-sm text-outline">JPG, PNG max 5MB</p>
+                  <p className="text-label-sm text-outline">JPG, PNG max 4MB</p>
                 </div>
               </div>
 
