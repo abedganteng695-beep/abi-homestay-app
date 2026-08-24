@@ -74,7 +74,19 @@ export default function PenghuniPage() {
   };
 
   return (
-    <main className="pt-[88px] px-4 md:px-6 max-w-container-max mx-auto md:ml-64 pb-32">
+    <main className="pt-20 md:pt-8 px-4 md:px-6 max-w-container-max mx-auto pb-28 md:pb-12">
+      {/* Desktop Header */}
+      <div className="hidden md:flex justify-between items-end mb-6 pt-2">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
+            Daftar Penghuni
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+            Pengelolaan Data Penghuni &amp; Masa Sewa
+          </p>
+        </div>
+      </div>
+
       {/* Header & Search */}
       <div className="mb-md animate-slide-up stagger-1">
         <div className="relative group">
@@ -288,7 +300,7 @@ export default function PenghuniPage() {
 
       {/* Add Tenant Bottom Sheet */}
       {isAddOpen && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.1)] pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.1)] max-h-[85vh] overflow-y-auto hide-scrollbar pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
           <div
             className="w-full flex justify-center pt-4 pb-2 cursor-pointer"
             onClick={() => setIsAddOpen(false)}

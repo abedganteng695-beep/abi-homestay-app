@@ -90,7 +90,19 @@ export default function PengaturanPage() {
   };
 
   return (
-    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pb-32 pt-20 md:ml-64">
+    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pt-20 md:pt-8 pb-28 md:pb-12">
+      {/* Desktop Header */}
+      <div className="hidden md:flex justify-between items-end mb-6 pt-2">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
+            Pengaturan
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+            Konfigurasi Operasional &amp; Sistem
+          </p>
+        </div>
+      </div>
+
       {/* Header Profile */}
       <section className="flex flex-col items-center justify-center pt-md pb-lg text-center relative z-10 animate-slide-up stagger-1">
         <h2 className="font-headline-md text-headline-md text-primary-container mb-1">
@@ -249,7 +261,7 @@ export default function PengaturanPage() {
 
       {/* Bottom Sheet: Master Harga Sewa */}
       {activeSheet === "PRICE" && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
           <div
             className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
             onClick={() => setActiveSheet(null)}
@@ -352,7 +364,7 @@ export default function PengaturanPage() {
 
       {/* Bottom Sheet: Fasilitas & Inventaris */}
       {activeSheet === "FACILITIES" && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
           <div
             className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
             onClick={() => setActiveSheet(null)}

@@ -108,26 +108,28 @@ export default function Navigation() {
       </aside>
 
       {/* BottomNavBar (Mobile) */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm pb-safe pt-2 bg-surface/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-1 sm:px-3 pb-safe pt-1.5 bg-surface/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center px-4 py-1 transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center px-1.5 sm:px-3 py-1 transition-all duration-300 ${
                 isActive
-                  ? "text-secondary bg-secondary-container/30 rounded-xl animate-bounce-gentle font-bold"
-                  : "text-on-surface-variant hover:text-secondary-fixed-variant hover:-translate-y-1"
+                  ? "text-secondary bg-secondary-container/30 rounded-xl font-bold"
+                  : "text-on-surface-variant hover:text-secondary-fixed-variant"
               }`}
             >
               <span
-                className="material-symbols-outlined"
+                className="material-symbols-outlined text-[20px] sm:text-[24px]"
                 style={isActive ? { fontVariationSettings: "'FILL' 1" } : {}}
               >
                 {item.icon}
               </span>
-              <span className="font-label-sm text-label-sm mt-1">{item.label}</span>
+              <span className="text-[10px] sm:text-[11px] font-medium leading-tight mt-0.5 whitespace-nowrap">
+                {item.label}
+              </span>
             </Link>
           );
         })}

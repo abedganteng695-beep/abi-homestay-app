@@ -28,9 +28,21 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
     <>
       <SplashScreen />
 
-      <main className="pt-[88px] px-4 md:px-6 max-w-container-max mx-auto md:ml-64 pb-32 md:pb-12">
+      <main className="pt-20 md:pt-8 px-4 md:px-6 max-w-container-max mx-auto pb-28 md:pb-12">
+        {/* Desktop Header */}
+        <div className="hidden md:flex justify-between items-end mb-6 pt-2">
+          <div>
+            <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
+              Beranda
+            </h1>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+              Ringkasan Operasional Abi Homestay
+            </p>
+          </div>
+        </div>
+
         {/* Stat Cards Grid */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 pt-4">
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 pt-2">
           {/* Total Kamar */}
           <div className="bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] flex flex-col justify-between micro-glow-blue transition-all duration-300 hover:scale-[1.02] animate-slide-up stagger-1">
             <div className="flex justify-between items-start mb-2">
@@ -42,7 +54,7 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
             </div>
             <div>
               <p className="font-label-md text-on-surface-variant">Total Kamar</p>
-              <p className="font-display-lg text-display-lg text-brand-deep-blue mt-1">
+              <p className="text-3xl sm:text-4xl md:text-display-lg font-bold text-brand-deep-blue mt-1">
                 <AnimatedCounter target={stats.totalRooms} />
               </p>
             </div>
@@ -59,7 +71,7 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
             </div>
             <div>
               <p className="font-label-md text-on-surface-variant">Terisi</p>
-              <p className="font-display-lg text-display-lg text-brand-teal mt-1">
+              <p className="text-3xl sm:text-4xl md:text-display-lg font-bold text-brand-teal mt-1">
                 <AnimatedCounter target={stats.occupiedCount} />
               </p>
             </div>
@@ -76,7 +88,7 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
             </div>
             <div>
               <p className="font-label-md text-on-surface-variant">Kosong</p>
-              <p className="font-display-lg text-display-lg text-brand-amber mt-1">
+              <p className="text-3xl sm:text-4xl md:text-display-lg font-bold text-brand-amber mt-1">
                 <AnimatedCounter target={stats.availableCount} />
               </p>
             </div>
@@ -93,7 +105,7 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
             </div>
             <div>
               <p className="font-label-md text-on-surface-variant">Perbaikan</p>
-              <p className="font-display-lg text-display-lg text-error mt-1">
+              <p className="text-3xl sm:text-4xl md:text-display-lg font-bold text-error mt-1">
                 <AnimatedCounter target={stats.maintenanceCount} />
               </p>
             </div>

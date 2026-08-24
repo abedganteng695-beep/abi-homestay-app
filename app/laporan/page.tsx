@@ -83,9 +83,21 @@ export default function LaporanPage() {
   };
 
   return (
-    <main className="flex-1 px-4 py-6 max-w-container-max mx-auto md:ml-64 w-full pb-32">
+    <main className="flex-1 px-4 md:px-6 py-6 max-w-container-max mx-auto w-full pt-20 md:pt-8 pb-28 md:pb-12">
+      {/* Desktop Header */}
+      <div className="hidden md:flex justify-between items-end mb-6 pt-2">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
+            Laporan Keuangan
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+            Ringkasan Transaksi &amp; Catatan Pembayaran
+          </p>
+        </div>
+      </div>
+
       {/* Top Section: Pendapatan */}
-      <section className="mb-8 pt-16 md:pt-4">
+      <section className="mb-8 pt-2">
         <div className="relative bg-primary-container rounded-3xl p-6 overflow-hidden shadow-lg border border-outline-variant/20">
           <div className="absolute inset-0 bg-chart-pattern opacity-60"></div>
           <div className="relative z-10">
@@ -94,7 +106,7 @@ export default function LaporanPage() {
             </p>
             <div className="flex items-baseline gap-2">
               <span className="text-on-primary text-body-lg font-semibold">Rp</span>
-              <h2 className="text-on-primary text-[40px] leading-[48px] font-bold tracking-tight">
+              <h2 className="text-on-primary text-2xl sm:text-3xl md:text-[40px] leading-tight font-bold tracking-tight">
                 <AnimatedCounter target={totalRevenue > 0 ? totalRevenue : 24500000} formatCurrency={true} />
               </h2>
             </div>
@@ -226,7 +238,7 @@ export default function LaporanPage() {
             onClick={() => setIsModalOpen(false)}
             className="absolute inset-0 bg-on-background/40 backdrop-blur-sm"
           ></div>
-          <div className="relative bg-surface w-full max-w-container-max mx-auto rounded-t-3xl shadow-2xl flex flex-col max-h-[795px] z-10 animate-slide-up">
+          <div className="relative bg-surface w-full max-w-container-max mx-auto rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh] pb-safe z-10 animate-slide-up md:max-w-lg md:rounded-t-2xl">
             <div className="w-full flex justify-center pt-4 pb-2">
               <div className="w-12 h-1.5 rounded-full bg-outline-variant/50"></div>
             </div>

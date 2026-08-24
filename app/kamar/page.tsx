@@ -93,15 +93,15 @@ export default function KamarPage() {
   );
 
   return (
-    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pt-24 md:pt-6 pb-24 md:ml-64 flex flex-col min-h-screen">
+    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pt-20 md:pt-8 pb-28 md:pb-12 flex flex-col min-h-screen">
       {/* Desktop Header */}
-      <div className="hidden md:flex justify-between items-end mb-6 pt-4">
+      <div className="hidden md:flex justify-between items-end mb-6 pt-2">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
             Manajemen Kamar
           </h1>
           <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-            24 Mei 2024
+            Pengelolaan Status &amp; Inventaris Kamar
           </p>
         </div>
       </div>
@@ -177,7 +177,7 @@ export default function KamarPage() {
 
       {/* Bottom Modal */}
       {selectedRoom && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:w-[500px] md:left-1/2 md:-translate-x-1/2 md:bottom-md md:rounded-3xl max-h-[795px] flex flex-col animate-slide-up">
+        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:w-[500px] md:left-1/2 md:-translate-x-1/2 md:bottom-md md:rounded-3xl max-h-[85vh] pb-safe flex flex-col animate-slide-up">
           <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mt-3 mb-2 shrink-0 md:hidden"></div>
 
           <div className="px-md py-4 flex justify-between items-center border-b border-surface-variant shrink-0">

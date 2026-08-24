@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "Aplikasi Manajemen Kost Abi Homestay Terpadu",
 };
 
+// helper --------------------------------------------------------------------------
+// function RootLayout untuk layout utama aplikasi Abi Homestay
+// input param : children (React.ReactNode)
+// output : HTML Document React JSX dengan navigasi dan wrapper utama
+// end of helper ------------------------------------------------------------------
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +33,9 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-on-background min-h-screen pb-24 md:pb-0">
         <Navigation />
-        {children}
+        <div className="md:pl-64 min-h-screen overflow-x-hidden w-full transition-all">
+          {children}
+        </div>
       </body>
     </html>
   );
