@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { getTransactions, getTenants, addTransaction } from "../actions";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 interface Tenant {
   id: string;
@@ -94,7 +95,7 @@ export default function LaporanPage() {
             <div className="flex items-baseline gap-2">
               <span className="text-on-primary text-body-lg font-semibold">Rp</span>
               <h2 className="text-on-primary text-[40px] leading-[48px] font-bold tracking-tight">
-                {totalRevenue > 0 ? totalRevenue.toLocaleString("id-ID") : "24.500.000"}
+                <AnimatedCounter target={totalRevenue > 0 ? totalRevenue : 24500000} formatCurrency={true} />
               </h2>
             </div>
             <div className="mt-4 flex items-center gap-2 text-secondary-fixed">
