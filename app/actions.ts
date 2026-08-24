@@ -69,9 +69,23 @@ export async function getRooms() {
         number: "asc",
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in getRooms:", error);
-    return [];
+    return [
+      {
+        id: "error-id",
+        number: "ERROR",
+        status: "MAINTENANCE",
+        inventories: ["perbaikan"],
+        tenant: {
+          id: "t-error",
+          name: String(error.message || error),
+          phone: "000",
+          dateIn: new Date(),
+          dateDue: null
+        }
+      }
+    ];
   }
 }
 
