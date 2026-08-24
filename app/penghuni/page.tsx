@@ -202,164 +202,165 @@ export default function PenghuniPage() {
         <span className="material-symbols-outlined text-[28px]">add</span>
       </button>
 
-      {/* Overlay */}
-      {(selectedTenant || isAddOpen) && (
-        <div
-          onClick={() => {
-            setSelectedTenant(null);
-            setIsAddOpen(false);
-          }}
-          className="fixed inset-0 bg-primary/40 z-[60] backdrop-blur-sm transition-opacity"
-        ></div>
-      )}
-
-      {/* Profile Details Bottom Sheet */}
+      {/* Profile Details Modal */}
       {selectedTenant && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.1)] max-h-[90vh] overflow-y-auto hide-scrollbar pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
           <div
-            className="w-full flex justify-center pt-4 pb-2 cursor-pointer"
             onClick={() => setSelectedTenant(null)}
-          >
-            <div className="w-12 h-1.5 bg-outline-variant rounded-full"></div>
-          </div>
-
-          <div className="px-6 pb-8">
-            <div className="flex flex-col items-center mb-6">
-              <div className="w-20 h-20 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md mb-3">
-                <span className="material-symbols-outlined text-4xl">person</span>
-              </div>
-              <h2 className="font-headline-lg text-headline-lg font-bold text-primary text-center">
-                {selectedTenant.name}
-              </h2>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="px-3 py-1 bg-surface-container rounded-lg font-label-md text-label-md text-on-surface-variant">
-                  Kamar {selectedTenant.room?.number || "--"}
-                </span>
-                <span className="px-3 py-1 bg-error-container text-on-error-container rounded-lg font-label-md text-label-md font-bold">
-                  {selectedTenant.status}
-                </span>
-              </div>
+            className="fixed inset-0 bg-primary/40 backdrop-blur-sm transition-opacity"
+          ></div>
+          <div className="relative w-full md:w-[500px] bg-surface rounded-t-3xl md:rounded-3xl shadow-2xl max-h-[85vh] overflow-y-auto hide-scrollbar pb-safe z-10 animate-slide-up">
+            <div
+              className="w-full flex justify-center pt-4 pb-2 cursor-pointer"
+              onClick={() => setSelectedTenant(null)}
+            >
+              <div className="w-12 h-1.5 bg-outline-variant rounded-full"></div>
             </div>
 
-            <a
-              href={`https://wa.me/${selectedTenant.phone.replace(/[^0-9]/g, "")}`}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full py-4 rounded-xl bg-[#25D366] text-white font-label-md text-label-md flex items-center justify-center gap-2 mb-6 shadow-[0_4px_16px_rgba(37,211,102,0.3)] active:scale-95 transition-transform"
-            >
-              Hubungi via WhatsApp
-            </a>
-
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-surface-container-low rounded-2xl p-4 border border-surface-variant">
-                <span className="material-symbols-outlined text-outline mb-2">calendar_today</span>
-                <p className="font-label-sm text-label-sm text-outline mb-1">Tanggal Masuk</p>
-                <p className="font-body-md text-body-md text-primary font-semibold">
-                  {new Date(selectedTenant.dateIn).toLocaleDateString("id-ID")}
-                </p>
+            <div className="px-6 pb-8">
+              <div className="flex flex-col items-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md mb-3">
+                  <span className="material-symbols-outlined text-4xl">person</span>
+                </div>
+                <h2 className="font-headline-lg text-headline-lg font-bold text-primary text-center">
+                  {selectedTenant.name}
+                </h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="px-3 py-1 bg-surface-container rounded-lg font-label-md text-label-md text-on-surface-variant">
+                    Kamar {selectedTenant.room?.number || "--"}
+                  </span>
+                  <span className="px-3 py-1 bg-error-container text-on-error-container rounded-lg font-label-md text-label-md font-bold">
+                    {selectedTenant.status}
+                  </span>
+                </div>
               </div>
 
-              <div className="bg-error-container/20 rounded-2xl p-4 border border-error-container">
-                <span className="material-symbols-outlined text-error mb-2">event_busy</span>
-                <p className="font-label-sm text-label-sm text-error mb-1">Jatuh Tempo</p>
-                <p className="font-body-md text-body-md text-primary font-semibold">
-                  {selectedTenant.dateDue
-                    ? new Date(selectedTenant.dateDue).toLocaleDateString("id-ID")
-                    : "-"}
-                </p>
-              </div>
+              <a
+                href={`https://wa.me/${selectedTenant.phone.replace(/[^0-9]/g, "")}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-4 rounded-xl bg-[#25D366] text-white font-label-md text-label-md flex items-center justify-center gap-2 mb-6 shadow-[0_4px_16px_rgba(37,211,102,0.3)] active:scale-95 transition-transform"
+              >
+                Hubungi via WhatsApp
+              </a>
 
-              <div className="col-span-2 bg-surface-container-low rounded-2xl p-4 border border-surface-variant flex items-center justify-between">
-                <div>
-                  <p className="font-label-sm text-label-sm text-outline mb-1">Tipe Sewa</p>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-surface-container-low rounded-2xl p-4 border border-surface-variant">
+                  <span className="material-symbols-outlined text-outline mb-2">calendar_today</span>
+                  <p className="font-label-sm text-label-sm text-outline mb-1">Tanggal Masuk</p>
                   <p className="font-body-md text-body-md text-primary font-semibold">
-                    {selectedTenant.rentType} (Rp {selectedTenant.rentAmount.toLocaleString("id-ID")})
+                    {new Date(selectedTenant.dateIn).toLocaleDateString("id-ID")}
                   </p>
                 </div>
-                <span className="material-symbols-outlined text-secondary">payments</span>
-              </div>
-            </div>
 
-            <div className="flex flex-col gap-3 mt-6">
-              <button
-                onClick={() => handleDelete(selectedTenant.id)}
-                disabled={isPending}
-                className="w-full py-3 rounded-xl bg-error-container/20 border border-error-container text-error font-label-md text-label-md hover:bg-error-container/40 transition-colors flex items-center justify-center gap-2"
-              >
-                <span className="material-symbols-outlined text-lg">person_remove</span>
-                Hapus Penghuni
-              </button>
-              <button
-                onClick={() => setSelectedTenant(null)}
-                className="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors"
-              >
-                Kembali ke Daftar
-              </button>
+                <div className="bg-error-container/20 rounded-2xl p-4 border border-error-container">
+                  <span className="material-symbols-outlined text-error mb-2">event_busy</span>
+                  <p className="font-label-sm text-label-sm text-error mb-1">Jatuh Tempo</p>
+                  <p className="font-body-md text-body-md text-primary font-semibold">
+                    {selectedTenant.dateDue
+                      ? new Date(selectedTenant.dateDue).toLocaleDateString("id-ID")
+                      : "-"}
+                  </p>
+                </div>
+
+                <div className="col-span-2 bg-surface-container-low rounded-2xl p-4 border border-surface-variant flex items-center justify-between">
+                  <div>
+                    <p className="font-label-sm text-label-sm text-outline mb-1">Tipe Sewa</p>
+                    <p className="font-body-md text-body-md text-primary font-semibold">
+                      {selectedTenant.rentType} (Rp {selectedTenant.rentAmount.toLocaleString("id-ID")})
+                    </p>
+                  </div>
+                  <span className="material-symbols-outlined text-secondary">payments</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3 mt-6">
+                <button
+                  onClick={() => handleDelete(selectedTenant.id)}
+                  disabled={isPending}
+                  className="w-full py-3 rounded-xl bg-error-container/20 border border-error-container text-error font-label-md text-label-md hover:bg-error-container/40 transition-colors flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-lg">person_remove</span>
+                  Hapus Penghuni
+                </button>
+                <button
+                  onClick={() => setSelectedTenant(null)}
+                  className="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors"
+                >
+                  Kembali ke Daftar
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Add Tenant Bottom Sheet */}
+      {/* Add Tenant Modal */}
       {isAddOpen && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.1)] max-h-[85vh] overflow-y-auto hide-scrollbar pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
           <div
-            className="w-full flex justify-center pt-4 pb-2 cursor-pointer"
             onClick={() => setIsAddOpen(false)}
-          >
-            <div className="w-12 h-1.5 bg-outline-variant rounded-full"></div>
-          </div>
+            className="fixed inset-0 bg-primary/40 backdrop-blur-sm transition-opacity"
+          ></div>
+          <div className="relative w-full md:w-[500px] bg-surface rounded-t-3xl md:rounded-3xl shadow-2xl max-h-[85vh] overflow-y-auto hide-scrollbar pb-safe z-10 animate-slide-up">
+            <div
+              className="w-full flex justify-center pt-4 pb-2 cursor-pointer"
+              onClick={() => setIsAddOpen(false)}
+            >
+              <div className="w-12 h-1.5 bg-outline-variant rounded-full"></div>
+            </div>
 
-          <div className="px-6 pb-8 pt-2">
-            <h3 className="font-headline-md text-headline-md text-primary mb-6">
-              Tambah Penghuni Baru
-            </h3>
-            <form onSubmit={handleAddSubmit} className="flex flex-col gap-4">
-              <div>
-                <label className="font-label-sm text-on-surface-variant mb-1 block">Nama</label>
-                <input
-                  type="text"
-                  required
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
-                  placeholder="Nama Lengkap"
-                />
-              </div>
+            <div className="px-6 pb-8 pt-2">
+              <h3 className="font-headline-md text-headline-md text-primary mb-6">
+                Tambah Penghuni Baru
+              </h3>
+              <form onSubmit={handleAddSubmit} className="flex flex-col gap-4">
+                <div>
+                  <label className="font-label-sm text-on-surface-variant mb-1 block">Nama</label>
+                  <input
+                    type="text"
+                    required
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
+                    placeholder="Nama Lengkap"
+                  />
+                </div>
 
-              <div>
-                <label className="font-label-sm text-on-surface-variant mb-1 block">Nomor Kamar</label>
-                <input
-                  type="text"
-                  required
-                  value={newRoom}
-                  onChange={(e) => setNewRoom(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
-                  placeholder="Contoh: 15 atau Kamar 15"
-                />
-              </div>
+                <div>
+                  <label className="font-label-sm text-on-surface-variant mb-1 block">Nomor Kamar</label>
+                  <input
+                    type="text"
+                    required
+                    value={newRoom}
+                    onChange={(e) => setNewRoom(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
+                    placeholder="Contoh: 15 atau Kamar 15"
+                  />
+                </div>
 
-              <div>
-                <label className="font-label-sm text-on-surface-variant mb-1 block">Nomor HP</label>
-                <input
-                  type="text"
-                  required
-                  value={newPhone}
-                  onChange={(e) => setNewPhone(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
-                  placeholder="08xx-xxxx-xxxx"
-                />
-              </div>
+                <div>
+                  <label className="font-label-sm text-on-surface-variant mb-1 block">Nomor HP</label>
+                  <input
+                    type="text"
+                    required
+                    value={newPhone}
+                    onChange={(e) => setNewPhone(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
+                    placeholder="08xx-xxxx-xxxx"
+                  />
+                </div>
 
-              <button
-                type="submit"
-                disabled={isPending}
-                className="w-full py-4 mt-2 rounded-xl bg-brand-teal text-white font-label-md text-label-md shadow-md flex items-center justify-center gap-2 hover:bg-brand-deep-blue transition-colors"
-              >
-                <span className="material-symbols-outlined text-lg">person_add</span>
-                {isPending ? "Menyimpan..." : "Simpan Penghuni"}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full py-4 mt-2 rounded-xl bg-brand-teal text-white font-label-md text-label-md shadow-md flex items-center justify-center gap-2 hover:bg-brand-deep-blue transition-colors"
+                >
+                  <span className="material-symbols-outlined text-lg">person_add</span>
+                  {isPending ? "Menyimpan..." : "Simpan Penghuni"}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}

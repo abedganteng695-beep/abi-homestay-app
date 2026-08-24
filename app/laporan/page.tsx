@@ -245,18 +245,18 @@ export default function LaporanPage() {
         </div>
       </section>
 
-      {/* Slide-up Modal: Catat Pembayaran */}
+      {/* Modal Popup: Catat Pembayaran */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
           <div
             onClick={() => setIsModalOpen(false)}
-            className="absolute inset-0 bg-on-background/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-primary/40 backdrop-blur-sm transition-opacity"
           ></div>
-          <div className="relative bg-surface w-full max-w-container-max mx-auto rounded-t-3xl shadow-2xl flex flex-col max-h-[85vh] pb-safe z-10 animate-slide-up md:max-w-lg md:rounded-t-2xl">
-            <div className="w-full flex justify-center pt-4 pb-2">
+          <div className="relative w-full md:w-[500px] bg-surface rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col max-h-[85vh] pb-safe animate-slide-up overflow-hidden z-10">
+            <div className="w-full flex justify-center pt-4 pb-2 shrink-0 md:hidden">
               <div className="w-12 h-1.5 rounded-full bg-outline-variant/50"></div>
             </div>
-            <div className="px-6 pb-4 flex items-center justify-between border-b border-surface-variant">
+            <div className="px-6 pb-4 flex items-center justify-between border-b border-surface-variant shrink-0">
               <h2 className="text-headline-md font-bold text-on-surface">Catat Pembayaran</h2>
               <button
                 onClick={() => setIsModalOpen(false)}

@@ -251,147 +251,151 @@ export default function PengaturanPage() {
         </div>
       </div>
 
-      {/* Backdrop */}
-      {activeSheet && (
-        <div
-          onClick={() => setActiveSheet(null)}
-          className="fixed inset-0 bg-primary-container/40 z-[60] backdrop-blur-sm transition-opacity"
-        ></div>
-      )}
-
-      {/* Bottom Sheet: Master Harga Sewa */}
+      {/* Modal Popup: Master Harga Sewa */}
       {activeSheet === "PRICE" && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
           <div
-            className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
             onClick={() => setActiveSheet(null)}
+            className="fixed inset-0 bg-primary-container/40 backdrop-blur-sm transition-opacity"
           ></div>
-          <div className="px-md pb-6">
-            <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
-              <span className="material-symbols-outlined text-secondary">sell</span>
-              Master Harga Sewa
-            </h2>
+          <div className="relative w-full md:w-[500px] bg-surface-container-lowest z-10 rounded-t-3xl md:rounded-3xl shadow-2xl pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar animate-slide-up">
+            <div
+              className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
+              onClick={() => setActiveSheet(null)}
+            ></div>
+            <div className="px-md pb-6">
+              <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+                <span className="material-symbols-outlined text-secondary">sell</span>
+                Master Harga Sewa
+              </h2>
 
-            <form onSubmit={handleSavePricing} className="space-y-4">
-              <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
-                  Tarif Harian
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                    Rp
-                  </span>
-                  <input
-                    type="text"
-                    value={daily}
-                    onChange={(e) => setDaily(e.target.value)}
-                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
-                  />
+              <form onSubmit={handleSavePricing} className="space-y-4">
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                    Tarif Harian
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      value={daily}
+                      onChange={(e) => setDaily(e.target.value)}
+                      className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
-                  Tarif Mingguan
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                    Rp
-                  </span>
-                  <input
-                    type="text"
-                    value={weekly}
-                    onChange={(e) => setWeekly(e.target.value)}
-                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
-                  />
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                    Tarif Mingguan
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      value={weekly}
+                      onChange={(e) => setWeekly(e.target.value)}
+                      className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
-                  Tarif Bulanan
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                    Rp
-                  </span>
-                  <input
-                    type="text"
-                    value={monthly}
-                    onChange={(e) => setMonthly(e.target.value)}
-                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
-                  />
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                    Tarif Bulanan
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      value={monthly}
+                      onChange={(e) => setMonthly(e.target.value)}
+                      className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
-                  Tarif Tahunan
-                </label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
-                    Rp
-                  </span>
-                  <input
-                    type="text"
-                    value={yearly}
-                    onChange={(e) => setYearly(e.target.value)}
-                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
-                  />
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                    Tarif Tahunan
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      value={yearly}
+                      onChange={(e) => setYearly(e.target.value)}
+                      className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="pt-4 flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setActiveSheet(null)}
-                  className="flex-1 py-3 px-4 rounded-xl border border-primary-container text-primary-container font-label-md text-label-md text-center hover:bg-surface-variant transition-colors"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="flex-1 py-3 px-4 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md text-center shadow-md shadow-secondary/20 hover:bg-secondary-container hover:text-secondary-fixed-variant transition-colors premium-glow"
-                >
-                  {isPending ? "Menyimpan..." : "Simpan Perubahan"}
-                </button>
-              </div>
-            </form>
+                <div className="pt-4 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSheet(null)}
+                    className="flex-1 py-3 px-4 rounded-xl border border-primary-container text-primary-container font-label-md text-label-md text-center hover:bg-surface-variant transition-colors"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    className="flex-1 py-3 px-4 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md text-center shadow-md shadow-secondary/20 hover:bg-secondary-container hover:text-secondary-fixed-variant transition-colors premium-glow"
+                  >
+                    {isPending ? "Menyimpan..." : "Simpan Perubahan"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Bottom Sheet: Fasilitas & Inventaris */}
+      {/* Modal Popup: Fasilitas & Inventaris */}
       {activeSheet === "FACILITIES" && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
           <div
-            className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
             onClick={() => setActiveSheet(null)}
+            className="fixed inset-0 bg-primary-container/40 backdrop-blur-sm transition-opacity"
           ></div>
-          <div className="px-md pb-6">
-            <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
-              <span className="material-symbols-outlined text-secondary">chair</span>
-              Fasilitas &amp; Inventaris
-            </h2>
+          <div className="relative w-full md:w-[500px] bg-surface-container-lowest z-10 rounded-t-3xl md:rounded-3xl shadow-2xl pt-2 pb-safe max-h-[85vh] overflow-y-auto hide-scrollbar animate-slide-up">
+            <div
+              className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
+              onClick={() => setActiveSheet(null)}
+            ></div>
+            <div className="px-md pb-6">
+              <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+                <span className="material-symbols-outlined text-secondary">chair</span>
+                Fasilitas &amp; Inventaris
+              </h2>
 
-            <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
-              {FACILITIES_LIST.map((facility) => (
-                <div key={facility} className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-secondary">check_circle</span>
-                  <span className="font-body-md text-on-surface">{facility}</span>
-                </div>
-              ))}
-            </div>
+              <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+                {FACILITIES_LIST.map((facility) => (
+                  <div key={facility} className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-secondary">check_circle</span>
+                    <span className="font-body-md text-on-surface">{facility}</span>
+                  </div>
+                ))}
+              </div>
 
-            <div className="pt-6 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setActiveSheet(null)}
-                className="flex-1 py-3 px-4 rounded-xl bg-surface-variant text-on-surface-variant font-label-md text-label-md text-center hover:bg-surface-container-high transition-colors"
-              >
-                Tutup
-              </button>
+              <div className="pt-6 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveSheet(null)}
+                  className="flex-1 py-3 px-4 rounded-xl bg-surface-variant text-on-surface-variant font-label-md text-label-md text-center hover:bg-surface-container-high transition-colors"
+                >
+                  Tutup
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -167,126 +167,125 @@ export default function KamarPage() {
         </div>
       </div>
 
-      {/* Modal Overlay */}
+      {/* Modal Popup: Kamar Detail */}
       {selectedRoom && (
-        <div
-          className="fixed inset-0 bg-primary/40 backdrop-blur-sm z-[60] transition-opacity"
-          onClick={closeModal}
-        ></div>
-      )}
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4">
+          <div
+            className="fixed inset-0 bg-primary/40 backdrop-blur-sm transition-opacity"
+            onClick={closeModal}
+          ></div>
 
-      {/* Bottom Modal */}
-      {selectedRoom && (
-        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:w-[500px] md:left-1/2 md:-translate-x-1/2 md:bottom-md md:rounded-3xl max-h-[85vh] pb-safe flex flex-col animate-slide-up">
-          <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mt-3 mb-2 shrink-0 md:hidden"></div>
+          <div className="relative w-full md:w-[500px] bg-surface rounded-t-3xl md:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col z-10 animate-slide-up overflow-hidden pb-safe">
+            <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mt-3 mb-2 shrink-0 md:hidden"></div>
 
-          <div className="px-md py-4 flex justify-between items-center border-b border-surface-variant shrink-0">
-            <div>
-              <h2 className="font-headline-md text-headline-md text-primary">
-                Kamar {selectedRoom.number}
-              </h2>
-              <span
-                className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mt-1 ${
-                  selectedRoom.status === "OCCUPIED"
-                    ? "bg-surface-container text-primary-container"
-                    : selectedRoom.status === "AVAILABLE"
-                    ? "bg-[#0D9488]/10 text-[#0D9488] border border-[#0D9488]/20"
-                    : "bg-[#F59E0B]/10 text-[#D97706] border border-[#F59E0B]/20"
-                }`}
-              >
-                {selectedRoom.status === "OCCUPIED"
-                  ? "Terisi"
-                  : selectedRoom.status === "AVAILABLE"
-                  ? "Tersedia"
-                  : "Perbaikan"}
-              </span>
-            </div>
-            <button
-              onClick={closeModal}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant transition-colors"
-            >
-              <span className="material-symbols-outlined">close</span>
-            </button>
-          </div>
-
-          <div className="p-md overflow-y-auto no-scrollbar flex-1 space-y-6">
-            {/* Tenant Info (Conditional) */}
-            {selectedRoom.tenant && (
+            <div className="px-md py-4 flex justify-between items-center border-b border-surface-variant shrink-0">
               <div>
-                <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
-                  Informasi Penghuni
-                </h3>
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-outline-variant/20 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md">
-                    <span className="material-symbols-outlined">person</span>
-                  </div>
-                  <div>
-                    <p className="font-body-md text-body-md text-primary font-semibold">
-                      {selectedRoom.tenant.name}
-                    </p>
-                    <p className="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
-                      {selectedRoom.tenant.phone}
-                    </p>
+                <h2 className="font-headline-md text-headline-md text-primary">
+                  Kamar {selectedRoom.number}
+                </h2>
+                <span
+                  className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mt-1 ${
+                    selectedRoom.status === "OCCUPIED"
+                      ? "bg-surface-container text-primary-container"
+                      : selectedRoom.status === "AVAILABLE"
+                      ? "bg-[#0D9488]/10 text-[#0D9488] border border-[#0D9488]/20"
+                      : "bg-[#F59E0B]/10 text-[#D97706] border border-[#F59E0B]/20"
+                  }`}
+                >
+                  {selectedRoom.status === "OCCUPIED"
+                    ? "Terisi"
+                    : selectedRoom.status === "AVAILABLE"
+                    ? "Tersedia"
+                    : "Perbaikan"}
+                </span>
+              </div>
+              <button
+                onClick={closeModal}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant transition-colors"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <div className="p-md overflow-y-auto no-scrollbar flex-1 space-y-6">
+              {/* Tenant Info (Conditional) */}
+              {selectedRoom.tenant && (
+                <div>
+                  <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
+                    Informasi Penghuni
+                  </h3>
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-outline-variant/20 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md">
+                      <span className="material-symbols-outlined">person</span>
+                    </div>
+                    <div>
+                      <p className="font-body-md text-body-md text-primary font-semibold">
+                        {selectedRoom.tenant.name}
+                      </p>
+                      <p className="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                        {selectedRoom.tenant.phone}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Inventory & Condition */}
-            <div>
-              <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
-                Inventaris &amp; Kondisi
-              </h3>
-              <div className="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden divide-y divide-surface-variant/50">
-                {INVENTORY_ITEMS.map((item, idx) => {
-                  const state = inventoryStates[idx] || "baik";
-                  return (
-                    <div key={item.name} className="flex items-center justify-between p-4">
-                      <div className="flex items-center gap-3 text-primary">
-                        <span className="material-symbols-outlined text-outline">
-                          {item.icon}
-                        </span>
-                        <span className="font-body-md text-body-md">{item.name}</span>
+              {/* Inventory & Condition */}
+              <div>
+                <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
+                  Inventaris &amp; Kondisi
+                </h3>
+                <div className="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden divide-y divide-surface-variant/50">
+                  {INVENTORY_ITEMS.map((item, idx) => {
+                    const state = inventoryStates[idx] || "baik";
+                    return (
+                      <div key={item.name} className="flex items-center justify-between p-4">
+                        <div className="flex items-center gap-3 text-primary">
+                          <span className="material-symbols-outlined text-outline">
+                            {item.icon}
+                          </span>
+                          <span className="font-body-md text-body-md">{item.name}</span>
+                        </div>
+                        <div className="flex bg-surface-container-low rounded-lg p-1">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleInventory(idx, "baik")}
+                            className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
+                              state === "baik"
+                                ? "font-semibold bg-white shadow-sm text-secondary"
+                                : "font-medium text-on-surface-variant"
+                            }`}
+                          >
+                            Baik
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleInventory(idx, "perbaikan")}
+                            className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
+                              state === "perbaikan"
+                                ? "font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm"
+                                : "font-medium text-on-surface-variant"
+                            }`}
+                          >
+                            Perbaikan
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex bg-surface-container-low rounded-lg p-1">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleInventory(idx, "baik")}
-                          className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
-                            state === "baik"
-                              ? "font-semibold bg-white shadow-sm text-secondary"
-                              : "font-medium text-on-surface-variant"
-                          }`}
-                        >
-                          Baik
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleInventory(idx, "perbaikan")}
-                          className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
-                            state === "perbaikan"
-                              ? "font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm"
-                              : "font-medium text-on-surface-variant"
-                          }`}
-                        >
-                          Perbaikan
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="p-md pt-2 shrink-0 border-t border-surface-variant bg-surface rounded-b-3xl">
-            <button
-              onClick={handleSaveChanges}
-              disabled={isPending}
-              className="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2"
-            >
-              {isPending ? "Menyimpan..." : "Simpan Perubahan"}
-            </button>
+            <div className="p-md pt-2 shrink-0 border-t border-surface-variant bg-surface">
+              <button
+                onClick={handleSaveChanges}
+                disabled={isPending}
+                className="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2"
+              >
+                {isPending ? "Menyimpan..." : "Simpan Perubahan"}
+              </button>
+            </div>
           </div>
         </div>
       )}
