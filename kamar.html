@@ -422,18 +422,16 @@
         // Mock data distribution
         const states = [
             { id: 'available', color: 'text-[#0D9488]', bg: 'bg-[#0D9488]/10', icon: 'check_circle', class: 'state-available' },
-            { id: 'occupied', color: 'text-[#0D9488]', bg: 'bg-[#0D9488]/10', icon: 'person', class: 'state-available' },
             { id: 'maintenance', color: 'text-[#D97706]', bg: 'bg-[#F59E0B]/10', icon: 'build', class: 'state-maintenance' }
         ];
 
         for (let i = 1; i <= totalRooms; i++) {
             const roomNumber = i.toString().padStart(2, '0');
-            // Randomly assign a state for demonstration, weighted towards occupied
+            // Randomly assign a state for demonstration, weighted towards available
             const rand = Math.random();
             let state;
-            if (rand < 0.2) state = states[0]; // Available
-            else if (rand < 0.85) state = states[1]; // Occupied
-            else state = states[2]; // Maintenance
+            if (rand < 0.85) state = states[0]; // Available/Good
+            else state = states[1]; // Maintenance/Damaged
 
             // Initialize inventory state matching the card state
             if (state.id === 'maintenance') {

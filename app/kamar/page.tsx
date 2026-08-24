@@ -139,10 +139,6 @@ export default function KamarPage() {
               stateClass = "state-maintenance";
               iconBg = "bg-[#F59E0B]/10 text-[#D97706]";
               iconName = "build";
-            } else if (room.status === "OCCUPIED") {
-              stateClass = "state-occupied";
-              iconBg = "bg-[#0D9488]/10 text-[#0D9488]";
-              iconName = "person";
             }
 
             const isAboveFold = idx < 12;
