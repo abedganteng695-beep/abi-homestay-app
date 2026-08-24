@@ -371,7 +371,7 @@
 </div>
 </main>
 <!-- Floating Action Button -->
-<button class="fixed bottom-24 right-4 md:right-8 w-14 h-14 bg-secondary text-on-secondary rounded-2xl shadow-[0_8px_24px_rgba(13,148,136,0.3)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40 animate-slide-up stagger-3" onclick="openActionSheet()">
+<button class="fixed bottom-24 right-4 md:right-8 w-14 h-14 bg-secondary text-on-secondary rounded-2xl shadow-[0_8px_24px_rgba(13,148,136,0.3)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40 animate-slide-up stagger-3" onclick="openAddTenantModal()">
 <span class="material-symbols-outlined text-[28px]">add</span>
 </button>
 <!-- Bottom Nav Bar (From Shared Components JSON) -->
@@ -445,6 +445,10 @@
 
 <div class="flex flex-col gap-4 mt-8">
 <button class="w-full py-3 rounded-xl border border-secondary text-secondary font-label-md text-label-md hover:bg-secondary-container/20 transition-colors">Edit Profil</button>
+<button onclick="deleteTenant()" class="w-full py-3 rounded-xl bg-error-container/20 border border-error-container text-error font-label-md text-label-md hover:bg-error-container/40 transition-colors flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined text-lg">person_remove</span>
+    Hapus Penghuni
+</button>
 <button onclick="closeAllSheets()" class="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
     <span class="material-symbols-outlined text-lg">arrow_back</span>
     Kembali ke Daftar
@@ -453,31 +457,29 @@
 </div>
 </div>
 
-<!-- Action Bottom Sheet (FAB) -->
-<div class="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] bottom-sheet shadow-[0_-8px_30px_rgba(0,0,0,0.1)] pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl" id="actionSheet">
+<!-- Add Tenant Bottom Sheet -->
+<div class="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] bottom-sheet shadow-[0_-8px_30px_rgba(0,0,0,0.1)] pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl max-h-[90vh] overflow-y-auto" id="addTenantSheet">
     <div class="w-full flex justify-center pt-4 pb-2" onclick="closeAllSheets()">
         <div class="w-12 h-1.5 bg-outline-variant rounded-full cursor-pointer"></div>
     </div>
     <div class="px-6 pb-8 pt-2">
-        <h3 class="font-headline-md text-headline-md text-primary mb-6">Aksi Penghuni</h3>
+        <h3 class="font-headline-md text-headline-md text-primary mb-6">Tambah Penghuni Baru</h3>
         <div class="flex flex-col gap-4">
-            <button class="w-full py-4 px-4 rounded-xl bg-surface-container-low border border-surface-variant flex items-center gap-4 hover:bg-surface-variant transition-colors active:scale-95 text-left" onclick="closeAllSheets()">
-                <div class="w-12 h-12 shrink-0 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-2xl">person_add</span>
-                </div>
-                <div class="flex-1">
-                    <p class="font-label-md text-label-md text-primary">Tambah Penghuni</p>
-                    <p class="font-body-md text-label-sm text-on-surface-variant mt-1">Daftarkan penghuni baru ke sistem</p>
-                </div>
-            </button>
-            <button class="w-full py-4 px-4 rounded-xl bg-error-container/20 border border-error-container flex items-center gap-4 hover:bg-error-container/40 transition-colors active:scale-95 text-left" onclick="closeAllSheets()">
-                <div class="w-12 h-12 shrink-0 rounded-full bg-error-container text-error flex items-center justify-center">
-                    <span class="material-symbols-outlined text-2xl">person_remove</span>
-                </div>
-                <div class="flex-1">
-                    <p class="font-label-md text-label-md text-error">Hapus Penghuni</p>
-                    <p class="font-body-md text-label-sm text-on-surface-variant mt-1">Keluarkan penghuni dari sistem</p>
-                </div>
+            <div>
+                <label class="font-label-sm text-on-surface-variant mb-1 block">Nama</label>
+                <input type="text" id="newTenantName" class="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md" placeholder="Nama Lengkap">
+            </div>
+            <div>
+                <label class="font-label-sm text-on-surface-variant mb-1 block">Nomor Kamar</label>
+                <input type="text" id="newTenantRoom" class="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md" placeholder="Contoh: Kamar 15">
+            </div>
+            <div>
+                <label class="font-label-sm text-on-surface-variant mb-1 block">Nomor HP</label>
+                <input type="text" id="newTenantPhone" class="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md" placeholder="08xx-xxxx-xxxx">
+            </div>
+            <button onclick="saveNewTenant()" class="w-full py-4 mt-2 rounded-xl bg-brand-teal text-white font-label-md text-label-md shadow-md flex items-center justify-center gap-2 hover:bg-brand-deep-blue transition-colors">
+                <span class="material-symbols-outlined text-lg">person_add</span>
+                Simpan Penghuni
             </button>
         </div>
     </div>
@@ -528,9 +530,7 @@
         });
 
         // Swipe to reveal logic
-        const swipeContents = document.querySelectorAll('.swipe-content');
-        
-        swipeContents.forEach(content => {
+        function setupSwipeAction(content) {
             let startX = 0;
             let currentX = 0;
             let isSwiping = false;
@@ -569,38 +569,105 @@
                 // Handle click without swipe
                 if (!isSwiping && currentX === 0) {
                     const card = content.closest('.tenant-card');
-                    if(card) openTenantDetails(card);
+                    if(card) window.openTenantDetails(card);
                 }
                 
                 currentX = 0;
             });
+        }
+        
+        const swipeContents = document.querySelectorAll('.swipe-content');
+        swipeContents.forEach(content => {
+            setupSwipeAction(content);
         });
 
         // Bottom Sheet Logic
         const overlay = document.getElementById('modalOverlay');
         const sheet = document.getElementById('bottomSheet');
-        const actionSheet = document.getElementById('actionSheet');
+        const addTenantSheet = document.getElementById('addTenantSheet');
+        window.currentSelectedCard = null;
 
-        function openBottomSheet() {
+        window.openBottomSheet = function() {
             overlay.classList.add('active');
             sheet.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
         
-        function openActionSheet() {
+        window.openAddTenantModal = function() {
             overlay.classList.add('active');
-            actionSheet.classList.add('active');
+            addTenantSheet.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeAllSheets() {
+        window.closeAllSheets = function() {
             overlay.classList.remove('active');
             sheet.classList.remove('active');
-            actionSheet.classList.remove('active');
+            if(addTenantSheet) addTenantSheet.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        function openTenantDetails(card) {
+        window.deleteTenant = function() {
+            if (window.currentSelectedCard) {
+                window.currentSelectedCard.remove();
+                window.closeAllSheets();
+            }
+        }
+
+        window.saveNewTenant = function() {
+            const name = document.getElementById('newTenantName').value || 'Penghuni Baru';
+            const room = document.getElementById('newTenantRoom').value || 'Kamar --';
+            const phone = document.getElementById('newTenantPhone').value || '-';
+            
+            const list = document.getElementById('tenantList');
+            const newCard = document.createElement('div');
+            newCard.className = 'tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-1';
+            
+            newCard.setAttribute('data-status', 'aktif');
+            newCard.setAttribute('data-name', name);
+            newCard.setAttribute('data-phone', phone);
+            newCard.setAttribute('data-room', room);
+            newCard.setAttribute('data-status-text', 'Aktif');
+            newCard.setAttribute('data-status-class', 'bg-surface-container text-on-surface-variant');
+            newCard.setAttribute('data-date-in', 'Hari ini');
+            newCard.setAttribute('data-date-due', '-');
+            newCard.setAttribute('data-rent-type', '-');
+            newCard.setAttribute('data-image', '');
+
+            newCard.innerHTML = `
+                <div class="swipe-actions">
+                    <button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+                    </button>
+                    <button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                </div>
+                <div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+                    <div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-outline text-2xl">person</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-headline-md text-body-lg text-primary truncate">${name}</h3>
+                        <p class="font-body-md text-label-sm text-on-surface-variant truncate">${phone}</p>
+                    </div>
+                    <div class="shrink-0 flex flex-col items-end gap-1">
+                        <span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">${room}</span>
+                        <span class="font-label-sm text-[10px] text-on-surface-variant font-bold tracking-wider uppercase">Aktif</span>
+                    </div>
+                </div>
+            `;
+
+            list.insertBefore(newCard, list.firstChild);
+            setupSwipeAction(newCard.querySelector('.swipe-content'));
+            
+            document.getElementById('newTenantName').value = '';
+            document.getElementById('newTenantRoom').value = '';
+            document.getElementById('newTenantPhone').value = '';
+            window.closeAllSheets();
+        }
+
+        window.openTenantDetails = function(card) {
+            window.currentSelectedCard = card;
             // Remove glitchy animation states on click
             
             
