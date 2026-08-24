@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useMemo } from "react";
 import { getRooms, updateRoomInventory } from "../actions";
 
 interface Tenant {
@@ -88,9 +88,11 @@ export default function KamarPage() {
     });
   };
 
-  const filteredRooms = rooms.filter((r) =>
-    r.number.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredRooms = useMemo(() => {
+    return rooms.filter((r) =>
+      r.number.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [rooms, search]);
 
   return (
     <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pt-20 md:pt-8 pb-28 md:pb-12 flex flex-col min-h-screen">
@@ -143,14 +145,16 @@ export default function KamarPage() {
               iconName = "person";
             }
 
-            const delay = (idx * 0.01).toFixed(2);
+            const isAboveFold = idx < 12;
+            const animClass = isAboveFold ? "room-card" : "room-card-instant";
+            const delay = isAboveFold ? `${(idx * 0.02).toFixed(2)}s` : "0s";
 
             return (
               <div
                 key={room.id}
                 onClick={() => openModal(room)}
-                className={`room-card ${stateClass} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer`}
-                style={{ animationDelay: `${delay}s` }}
+                className={`lazy-card ${animClass} ${stateClass} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer gpu-accelerate`}
+                style={{ animationDelay: delay }}
               >
                 <span className="font-headline-lg text-headline-lg font-bold text-primary mb-2">
                   {room.number}

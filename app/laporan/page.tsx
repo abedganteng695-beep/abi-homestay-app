@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useMemo } from "react";
 import { getTransactions, getTenants, addTransaction } from "../actions";
 import AnimatedCounter from "@/components/AnimatedCounter";
 
@@ -53,9 +53,11 @@ export default function LaporanPage() {
     setTenants(tenantData as unknown as Tenant[]);
   };
 
-  const totalRevenue = transactions
-    .filter((t) => t.type === "INCOME")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  const totalRevenue = useMemo(() => {
+    return transactions
+      .filter((t) => t.type === "INCOME")
+      .reduce((acc, curr) => acc + curr.amount, 0);
+  }, [transactions]);
 
   const toggleAccordion = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -145,12 +147,15 @@ export default function LaporanPage() {
         <div className="space-y-3">
           {transactions.map((tx, idx) => {
             const isExpanded = expandedId === tx.id;
+            const isAboveFold = idx < 6;
+            const animDelay = isAboveFold ? `${((idx + 1) * 0.05).toFixed(2)}s` : "0s";
+
             return (
               <div
                 key={tx.id}
                 onClick={() => toggleAccordion(tx.id)}
-                className="transaction-card stagger-fade-in bg-surface rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-surface-variant cursor-pointer transition-colors hover:bg-surface-container-lowest"
-                style={{ animationDelay: `${(idx + 1) * 0.1}s` }}
+                className="lazy-card transaction-card bg-surface rounded-2xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-surface-variant cursor-pointer transition-colors hover:bg-surface-container-lowest gpu-accelerate"
+                style={{ animationDelay: animDelay }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">

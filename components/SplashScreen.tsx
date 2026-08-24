@@ -22,9 +22,9 @@ export default function SplashScreen() {
       const timer2 = setTimeout(() => {
         setVisible(false);
         sessionStorage.setItem("splashShown", "true");
-      }, 700);
+      }, 300);
       return () => clearTimeout(timer2);
-    }, 1500);
+    }, 400);
 
     return () => clearTimeout(timer1);
   }, []);

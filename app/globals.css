@@ -33,10 +33,26 @@ body {
   transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.lazy-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 110px;
+  contain: layout style paint;
+}
+
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
 .room-card {
   opacity: 0;
   transform: translateY(20px);
-  animation: slideUpFadeIn 0.5s ease-out forwards;
+  animation: slideUpFadeIn 0.4s ease-out forwards;
+}
+
+.room-card-instant {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @keyframes slideUpFadeIn {
