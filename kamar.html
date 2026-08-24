@@ -417,10 +417,12 @@
         const gridContainer = document.getElementById('roomGrid');
         const totalRooms = 58;
         
+        window.roomInventoryState = {};
+
         // Mock data distribution
         const states = [
             { id: 'available', color: 'text-[#0D9488]', bg: 'bg-[#0D9488]/10', icon: 'check_circle', class: 'state-available' },
-            { id: 'occupied', color: 'text-primary-container', bg: 'bg-surface-container', icon: 'person', class: 'state-occupied' },
+            { id: 'occupied', color: 'text-[#0D9488]', bg: 'bg-[#0D9488]/10', icon: 'person', class: 'state-available' },
             { id: 'maintenance', color: 'text-[#D97706]', bg: 'bg-[#F59E0B]/10', icon: 'build', class: 'state-maintenance' }
         ];
 
@@ -432,6 +434,13 @@
             if (rand < 0.2) state = states[0]; // Available
             else if (rand < 0.85) state = states[1]; // Occupied
             else state = states[2]; // Maintenance
+
+            // Initialize inventory state matching the card state
+            if (state.id === 'maintenance') {
+                window.roomInventoryState[roomNumber] = ['perbaikan', 'baik', 'baik', 'baik', 'baik'];
+            } else {
+                window.roomInventoryState[roomNumber] = ['baik', 'baik', 'baik', 'baik', 'baik'];
+            }
 
             const delay = (i * 0.02).toFixed(2); // Staggered animation delay
 
@@ -456,8 +465,6 @@
         const tenantSection = document.getElementById('tenantInfoSection');
         const modalTitle = document.getElementById('modalRoomTitle');
         const modalBadge = document.getElementById('modalRoomStatusBadge');
-
-        window.roomInventoryState = {};
 
         window.openModal = function(roomNumber, stateId) {
             window.currentRoom = roomNumber;
@@ -525,13 +532,17 @@
 
             const iconContainer = document.getElementById(`room-icon-container-${roomNumber}`);
             const iconSpan = document.getElementById(`room-icon-${roomNumber}`);
+            const card = document.getElementById(`room-card-${roomNumber}`);
 
-            if (iconContainer && iconSpan) {
+            if (iconContainer && iconSpan && card) {
+                card.classList.remove('state-available', 'state-occupied', 'state-maintenance');
                 if (hasDamage) {
+                    card.classList.add('state-maintenance');
                     iconContainer.className = "w-8 h-8 rounded-full bg-[#F59E0B]/10 flex items-center justify-center text-[#D97706]";
                     iconSpan.innerText = "build";
                     iconSpan.setAttribute("data-icon", "build");
                 } else {
+                    card.classList.add('state-available');
                     iconContainer.className = "w-8 h-8 rounded-full bg-[#0D9488]/10 flex items-center justify-center text-[#0D9488]";
                     iconSpan.innerText = "check_circle";
                     iconSpan.setAttribute("data-icon", "check_circle");
