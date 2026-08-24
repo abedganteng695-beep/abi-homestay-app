@@ -186,12 +186,12 @@ export default function KamarPage() {
                 Kamar {selectedRoom.number}
               </h2>
               <span
-                className={`inline-block px-2 py-0.5 rounded text-xs font-semibold mt-1 ${
+                className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mt-1 ${
                   selectedRoom.status === "OCCUPIED"
                     ? "bg-surface-container text-primary-container"
                     : selectedRoom.status === "AVAILABLE"
-                    ? "bg-[#0D9488]/10 text-[#0D9488]"
-                    : "bg-[#F59E0B]/10 text-[#D97706]"
+                    ? "bg-[#0D9488]/10 text-[#0D9488] border border-[#0D9488]/20"
+                    : "bg-[#F59E0B]/10 text-[#D97706] border border-[#F59E0B]/20"
                 }`}
               >
                 {selectedRoom.status === "OCCUPIED"
