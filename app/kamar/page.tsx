@@ -11,6 +11,8 @@ interface Tenant {
   dateDue: Date | null;
 }
 
+// interface 
+
 interface Room {
   id: string;
   number: string;
