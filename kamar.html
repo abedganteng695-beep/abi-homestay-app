@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manajemen Kamar - Abi Homestay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#86f2e4",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#bec6e0",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#89f5e7",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        // Custom Brand Colors based on prompt mapping
+                        "brand-deep-blue": "#0F172A",
+                        "brand-teal": "#0D9488",
+                        "brand-amber": "#F59E0B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "safe": "env(safe-area-inset-bottom, 20px)"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    },
+                    "animation": {
+                        "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "bounce-gentle": "bounceGentle 2s infinite"
+                    },
+                    "keyframes": {
+                        "slideUp": {
+                            "0%": { opacity: "0", transform: "translateY(24px)" },
+                            "100%": { opacity: "1", transform: "translateY(0)" }
+                        },
+                        "bounceGentle": {
+                            "0%, 100%": { transform: "translateY(-10%)", animationTimingFunction: "cubic-bezier(0.8,0,1,1)" },
+                            "50%": { transform: "none", animationTimingFunction: "cubic-bezier(0,0,0.2,1)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .room-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUpFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .press-effect {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .press-effect:active {
+            transform: scale(0.95);
+        }
+
+        /* Tonal Overlays for states */
+        .state-available {
+            background-color: rgba(13, 148, 136, 0.05); /* Soft teal */
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            box-shadow: 0px 4px 20px rgba(13, 148, 136, 0.05);
+        }
+        .state-occupied {
+            background-color: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+        }
+        .state-maintenance {
+            background-color: rgba(245, 158, 11, 0.05); /* Soft amber */
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            box-shadow: 0px 4px 20px rgba(245, 158, 11, 0.05);
+        }
+        
+        /* Modal Animation */
+        #roomModal {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%);
+        }
+        #roomModal.open {
+            transform: translateY(0);
+        }
+        #modalOverlay {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        #modalOverlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Hide scrollbar for grid */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes navHighlight {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(134, 242, 228, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(134, 242, 228, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(134, 242, 228, 0); }
+        }
+        .nav-highlight-active {
+            animation: navHighlight 1.5s infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Prefetch Other Pages for Instant Navigation -->
+    <link rel="prefetch" href="index.html" />
+    <link rel="prefetch" href="kamar.html" />
+    <link rel="prefetch" href="penghuni.html" />
+    <link rel="prefetch" href="laporan.html" />
+    <link rel="prefetch" href="pengaturan.html" />
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar (From JSON) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-md py-sm bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md shadow-sm transition-all md:hidden">
+<div class="flex items-center gap-sm">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed tracking-tight">Manajemen Kamar</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant" id="currentDate">12 Oktober 2023</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/20 transition-colors text-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-container-max mx-auto px-4 md:px-md pt-24 md:pt-md pb-md flex flex-col h-screen overflow-hidden">
+<!-- Desktop Header (Hidden on Mobile) -->
+<div class="hidden md:flex justify-between items-end mb-md pt-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Manajemen Kamar</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1" id="currentDateDesktop">12 Oktober 2023</p>
+</div>
+<div class="flex items-center gap-4">
+</div>
+</div>
+<!-- Search & Filter Controls -->
+<div class="flex gap-sm mb-md shrink-0">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input id="searchInput" class="w-full bg-[#F1F5F9] border border-outline-variant/30 rounded-xl py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors placeholder:font-body-md placeholder:text-on-surface-variant/60" placeholder="Cari No. Kamar..." type="text"/>
+</div>
+<button class="shrink-0 w-12 h-12 bg-white rounded-xl border border-outline-variant/30 flex items-center justify-center text-primary shadow-sm hover:shadow-md transition-shadow press-effect">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Room Grid -->
+<div class="flex-1 overflow-y-auto no-scrollbar pb-10" id="roomGridContainer">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-sm md:gap-4" id="roomGrid">
+<!-- Rooms will be generated via JS -->
+</div>
+</div>
+</main>
+<!-- BottomNavBar (From JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm pb-safe pt-2 bg-surface/90 dark:bg-surface-container-highest/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<a href="index.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Beranda</span>
+</a>
+<a href="#" class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed bg-secondary-container/30 dark:bg-secondary-fixed-dim/20 rounded-xl px-4 py-1 nav-highlight-active duration-300 animate-bounce-gentle">
+<span class="material-symbols-outlined mb-1" data-icon="bed" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bed</span>
+<span class="font-label-sm text-label-sm">Kamar</span>
+</a>
+<a href="penghuni.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm">Penghuni</span>
+</a>
+<a href="laporan.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm">Laporan</span>
+</a>
+<a href="pengaturan.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Pengaturan</span>
+</a>
+</nav>
+<!-- SideNav (Desktop) -->
+<aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-surface shadow-sm z-40 pt-md px-4 pb-4">
+<div class="flex items-center gap-2 mb-xl px-2">
+<div class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="apartment">apartment</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary font-bold">Abi Homestay</span>
+</div>
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-md text-label-md">Beranda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary bg-secondary-container/20 transition-colors font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="bed" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bed</span>
+<span class="font-label-md text-label-md">Kamar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Penghuni</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Laporan</span>
+</a>
+</nav>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant/50 transition-colors mt-auto" href="pengaturan.html">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Pengaturan</span>
+</a>
+</aside>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 bg-primary/40 backdrop-blur-sm z-[60]" id="modalOverlay" onclick="closeModal()"></div>
+<!-- Bottom Modal -->
+<div class="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:w-[500px] md:left-1/2 md:-translate-x-1/2 md:bottom-md md:rounded-3xl max-h-[795px] flex flex-col" id="roomModal">
+<div class="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mt-3 mb-2 shrink-0 md:hidden"></div>
+<div class="px-md py-4 flex justify-between items-center border-b border-surface-variant shrink-0">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary" id="modalRoomTitle">Kamar --</h2>
+<span class="inline-block px-2 py-0.5 rounded text-xs font-semibold mt-1" id="modalRoomStatusBadge">Status</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="p-md overflow-y-auto no-scrollbar flex-1">
+<!-- Tenant Info (Conditional) -->
+<div class="hidden mb-6" id="tenantInfoSection">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-3">Informasi Penghuni</h3>
+<div class="bg-white rounded-xl p-4 shadow-sm border border-outline-variant/20 flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-primary font-semibold" id="tenantName">Budi Santoso</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-0.5" id="leaseDates">12 Agt 2023 - 12 Jan 2024</p>
+</div>
+</div>
+</div>
+<!-- Inventory & Condition -->
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-3">Inventaris &amp; Kondisi</h3>
+<div class="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden">
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/50">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-outline" data-icon="ac_unit">ac_unit</span>
+<span class="font-body-md text-body-md">AC Panasonic 1/2 PK</span>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-1 inventory-toggle">
+<button class="px-3 py-1 rounded-md text-xs font-semibold bg-white shadow-sm text-secondary transition-all duration-200">Baik</button>
+<button class="px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200">Rusak</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/50">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-outline" data-icon="tv">tv</span>
+<span class="font-body-md text-body-md">TV LED 32"</span>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-1 inventory-toggle">
+<button class="px-3 py-1 rounded-md text-xs font-semibold bg-white shadow-sm text-secondary transition-all duration-200">Baik</button>
+<button class="px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200">Rusak</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-surface-variant/50">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-outline" data-icon="bed">bed</span>
+<span class="font-body-md text-body-md">Kasur Springbed</span>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-1 inventory-toggle">
+<button class="px-3 py-1 rounded-md text-xs font-semibold bg-white shadow-sm text-secondary transition-all duration-200">Baik</button>
+<button class="px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200">Rusak</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-outline" data-icon="door_front">door_front</span>
+<span class="font-body-md text-body-md">Kunci Pintu Pintar</span>
+</div>
+<div class="flex bg-surface-container-low rounded-lg p-1 inventory-toggle">
+<button class="px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200">Baik</button>
+<button class="px-3 py-1 rounded-md text-xs font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm transition-all duration-200">Perbaikan</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-md pt-2 shrink-0 border-t border-surface-variant bg-surface rounded-b-3xl">
+<button class="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2">
+                Simpan Perubahan
+             </button>
+</div>
+</div>
+<script>
+        // Adjust layout for desktop
+        if (window.innerWidth >= 768) {
+            document.querySelector('main').classList.add('md:ml-64');
+        }
+
+        // Set Dates
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date().toLocaleDateString('id-ID', options);
+        document.getElementById('currentDate').innerText = today;
+        document.getElementById('currentDateDesktop').innerText = today;
+
+        // Generate Grid
+        const gridContainer = document.getElementById('roomGrid');
+        const totalRooms = 58;
+        
+        // Mock data distribution
+        const states = [
+            { id: 'available', color: 'text-[#0D9488]', bg: 'bg-[#0D9488]/10', icon: 'check_circle', class: 'state-available' },
+            { id: 'occupied', color: 'text-primary-container', bg: 'bg-surface-container', icon: 'person', class: 'state-occupied' },
+            { id: 'maintenance', color: 'text-[#D97706]', bg: 'bg-[#F59E0B]/10', icon: 'build', class: 'state-maintenance' }
+        ];
+
+        for (let i = 1; i <= totalRooms; i++) {
+            const roomNumber = i.toString().padStart(2, '0');
+            // Randomly assign a state for demonstration, weighted towards occupied
+            const rand = Math.random();
+            let state;
+            if (rand < 0.2) state = states[0]; // Available
+            else if (rand < 0.85) state = states[1]; // Occupied
+            else state = states[2]; // Maintenance
+
+            const delay = (i * 0.02).toFixed(2); // Staggered animation delay
+
+            const cardHTML = `
+                <div class="room-card ${state.class} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer" 
+                     style="animation-delay: ${delay}s"
+                     onclick="openModal('${roomNumber}', '${state.id}')">
+                    
+                    <span class="font-headline-lg text-headline-lg font-bold text-primary mb-2">${roomNumber}</span>
+                    
+                    <div class="w-8 h-8 rounded-full ${state.bg} flex items-center justify-center ${state.color}">
+                        <span class="material-symbols-outlined text-[18px]" data-icon="${state.icon}">${state.icon}</span>
+                    </div>
+                </div>
+            `;
+            gridContainer.insertAdjacentHTML('beforeend', cardHTML);
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('roomModal');
+        const overlay = document.getElementById('modalOverlay');
+        const tenantSection = document.getElementById('tenantInfoSection');
+        const modalTitle = document.getElementById('modalRoomTitle');
+        const modalBadge = document.getElementById('modalRoomStatusBadge');
+
+        window.openModal = function(roomNumber, stateId) {
+            modalTitle.innerText = `Kamar ${roomNumber}`;
+            
+            if(stateId === 'occupied') {
+                tenantSection.classList.remove('hidden');
+                modalBadge.innerText = "Terisi";
+                modalBadge.className = "inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-surface-container text-primary-container mt-1";
+            } else if (stateId === 'available') {
+                tenantSection.classList.add('hidden');
+                modalBadge.innerText = "Tersedia";
+                modalBadge.className = "inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#0D9488]/10 text-[#0D9488] mt-1 border border-[#0D9488]/20";
+            } else {
+                tenantSection.classList.add('hidden');
+                modalBadge.innerText = "Perbaikan";
+                modalBadge.className = "inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#F59E0B]/10 text-[#D97706] mt-1 border border-[#F59E0B]/20";
+            }
+
+            modal.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        window.closeModal = function() {
+            modal.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Inventory Toggles Logic
+        document.querySelectorAll('.inventory-toggle').forEach(group => {
+            const btns = group.querySelectorAll('button');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Reset all buttons in the group
+                    btns.forEach(b => {
+                        b.className = 'px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200';
+                    });
+                    
+                    // Activate clicked button
+                    const text = btn.innerText.trim().toLowerCase();
+                    if (text === 'baik') {
+                        btn.className = 'px-3 py-1 rounded-md text-xs font-semibold bg-white shadow-sm text-secondary transition-all duration-200';
+                    } else if (text === 'rusak' || text === 'perbaikan') {
+                        btn.className = 'px-3 py-1 rounded-md text-xs font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm transition-all duration-200';
+                    }
+                });
+            });
+        });
+
+        // Search Logic
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const roomCards = document.querySelectorAll('.room-card');
+            
+            roomCards.forEach(card => {
+                const roomNumber = card.querySelector('.font-headline-lg').innerText.toLowerCase();
+                if (roomNumber.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body></html>

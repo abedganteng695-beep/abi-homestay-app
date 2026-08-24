@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pengaturan &amp; Operasional - Abi Homestay</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#86f2e4",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#bec6e0",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#89f5e7",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        // Custom Brand Colors based on prompt mapping
+                        "brand-deep-blue": "#0F172A",
+                        "brand-teal": "#0D9488",
+                        "brand-amber": "#F59E0B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "safe": "env(safe-area-inset-bottom, 20px)"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    },
+                    "animation": {
+                        "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "bounce-gentle": "bounceGentle 2s infinite"
+                    },
+                    "keyframes": {
+                        "slideUp": {
+                            "0%": { opacity: "0", transform: "translateY(24px)" },
+                            "100%": { opacity: "1", transform: "translateY(0)" }
+                        },
+                        "bounceGentle": {
+                            "0%, 100%": { transform: "translateY(-10%)", animationTimingFunction: "cubic-bezier(0.8,0,1,1)" },
+                            "50%": { transform: "none", animationTimingFunction: "cubic-bezier(0,0,0.2,1)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .stagger-0 { animation-delay: 0.0s; opacity: 0; }
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+        .stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+        /* Custom Styles & Micro-interactions */
+        body {
+            background-color: theme('colors.surface');
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Parallax Header */
+        #header-container {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .avatar-scroll {
+            transform-origin: top center;
+        }
+
+        /* Toggle Switch Spring Animation */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: theme('colors.secondary');
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.secondary');
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+        .toggle-label {
+            transition: background-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toggle-label:after {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Menu Item Ripple & Slide */
+        .menu-item {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-item:active {
+            transform: translateX(8px) scale(0.98);
+            background-color: theme('colors.surface-variant' / 20%);
+        }
+        .menu-item::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: theme('colors.secondary-container' / 30%);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .menu-item:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% { transform: scale(0, 0); opacity: 0.5; }
+            20% { transform: scale(25, 25); opacity: 0.3; }
+            100% { opacity: 0; transform: scale(40, 40); }
+        }
+
+        /* Bottom Sheet */
+        .bottom-sheet {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(100%);
+        }
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+        .backdrop {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* Premium Glow */
+        .premium-glow {
+            box-shadow: 0px 0px 15px rgba(13, 148, 136, 0.15);
+        }
+        
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  
+    <!-- Prefetch Other Pages for Instant Navigation -->
+    <link rel="prefetch" href="index.html" />
+    <link rel="prefetch" href="kamar.html" />
+    <link rel="prefetch" href="penghuni.html" />
+    <link rel="prefetch" href="laporan.html" />
+    <link rel="prefetch" href="pengaturan.html" />
+</head>
+<body class="text-on-surface flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-md py-sm bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md shadow-sm transition-all duration-300" id="top-app-bar">
+<div class="flex items-center gap-sm">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed" id="nav-title">Pengaturan</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/20 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-container-max mx-auto px-16 md:px-md pb-32 pt-20" id="main-scroll">
+<!-- Parallax Profile Header -->
+<section class="flex flex-col items-center justify-center pt-md pb-lg text-center relative z-10 animate-slide-up stagger-1" id="header-container">
+<h2 class="font-headline-md text-headline-md text-primary-container mb-1">Abi Homestay Pusat</h2>
+<div class="inline-flex items-center gap-2 bg-secondary text-on-secondary font-label-sm text-label-sm px-3 py-1 rounded-full shadow-sm">
+                    Administrator
+                </div>
+</section>
+<!-- Settings Cards -->
+<div class="space-y-sm md:grid md:grid-cols-2 md:gap-gutter md:space-y-0">
+<!-- Operasional Group -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low mb-sm md:mb-0 animate-slide-up stagger-2">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-3 px-2 uppercase tracking-wider">Operasional</h3>
+<button class="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest" onclick="toggleBottomSheet('price-sheet')">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">sell</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">Master Harga Sewa</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Atur tarif harian s/d tahunan</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">chevron_right</span>
+</button>
+<div class="w-full h-[1px] bg-surface-container-low my-1 ml-14"></div>
+<button class="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest" onclick="toggleBottomSheet('facilities-sheet')">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">chair</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">Fasilitas &amp; Inventaris</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Daftar inventaris default kamar</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">chevron_right</span>
+</button>
+</div>
+<!-- Sistem Group -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low animate-slide-up stagger-3">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-3 px-2 uppercase tracking-wider">Sistem &amp; Keamanan</h3>
+<div class="w-full flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-body-md font-medium text-primary-container">Auto-WhatsApp Reminders</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Tagihan &amp; info otomatis</p>
+</div>
+</div>
+<!-- Modern Toggle Switch -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 checked:left-auto checked:right-1" id="toggle1" name="toggle" style="border-color: theme('colors.surface-container-low'); box-shadow: 0 1px 3px rgba(0,0,0,0.1);" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-8 rounded-full bg-surface-container-low cursor-pointer" for="toggle1"></label>
+</div>
+</div>
+<div class="w-full h-[1px] bg-surface-container-low my-1 ml-14"></div>
+<button class="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">Keamanan Akun</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Password &amp; Akses staf</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">chevron_right</span>
+</button>
+</div>
+<!-- Support Group (Just to fill out the bento layout on tablet) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low md:col-span-2 mt-sm md:mt-0 animate-slide-up stagger-4">
+<button class="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">Pusat Bantuan</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm pb-safe pt-2 bg-surface/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<a href="index.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Beranda</span>
+</a>
+<a href="kamar.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="bed">bed</span>
+<span class="font-label-sm text-label-sm mt-1">Kamar</span>
+</a>
+<a href="penghuni.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm mt-1">Penghuni</span>
+</a>
+<a href="laporan.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Laporan</span>
+</a>
+<!-- Active Tab: Pengaturan -->
+<a href="#" class="flex flex-col items-center justify-center text-secondary bg-secondary-container/30 rounded-xl px-4 py-1 animate-bounce-gentle">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Pengaturan</span>
+</a>
+</nav>
+<!-- Bottom Sheet Backdrop -->
+<div class="backdrop fixed inset-0 bg-primary-container/40 z-[60] backdrop-blur-sm" id="sheet-backdrop" onclick="closeAllBottomSheets()"></div>
+<!-- Bottom Sheet: Master Harga Sewa -->
+<div class="bottom-sheet fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl" id="price-sheet">
+<!-- Drag Handle -->
+<div class="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer" onclick="toggleBottomSheet('price-sheet')"></div>
+<div class="px-md pb-6">
+<h2 class="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">sell</span>
+                Master Harga Sewa
+            </h2>
+<form class="space-y-4">
+<!-- Harian -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Tarif Harian</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">Rp</span>
+<input class="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow" type="text" value="150.000"/>
+</div>
+</div>
+<!-- Mingguan -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Tarif Mingguan</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">Rp</span>
+<input class="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow" type="text" value="900.000"/>
+</div>
+</div>
+<!-- Bulanan -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Tarif Bulanan</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">Rp</span>
+<input class="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow" type="text" value="2.500.000"/>
+</div>
+</div>
+<!-- Tahunan -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1">Tarif Tahunan</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">Rp</span>
+<input class="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow" type="text" value="28.000.000"/>
+</div>
+</div>
+<div class="pt-4 flex gap-3">
+<button class="flex-1 py-3 px-4 rounded-xl border border-primary-container text-primary-container font-label-md text-label-md text-center hover:bg-surface-variant transition-colors" onclick="toggleBottomSheet('price-sheet')" type="button">Batal</button>
+<button class="flex-1 py-3 px-4 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md text-center shadow-md shadow-secondary/20 hover:bg-secondary-container hover:text-secondary-fixed-variant transition-colors premium-glow" onclick="toggleBottomSheet('price-sheet')" type="button">Simpan Perubahan</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Bottom Sheet: Fasilitas & Inventaris -->
+<div class="bottom-sheet fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl" id="facilities-sheet">
+<!-- Drag Handle -->
+<div class="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer" onclick="toggleBottomSheet('facilities-sheet')"></div>
+<div class="px-md pb-6">
+<h2 class="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">chair</span>
+                Fasilitas &amp; Inventaris
+            </h2>
+<div class="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+    <!-- List of Facilities -->
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Kamar mandi dalam (shower)</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">AC</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">TV</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Lemari</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Meja + Kursi</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">CCTV</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">WIFI</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Dapur umum</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Halaman luas</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary">check_circle</span>
+        <span class="font-body-md text-on-surface">Air</span>
+    </div>
+</div>
+<div class="pt-6 flex gap-3">
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-variant text-on-surface-variant font-label-md text-label-md text-center hover:bg-surface-container-high transition-colors" onclick="toggleBottomSheet('facilities-sheet')" type="button">Tutup</button>
+</div>
+</div>
+</div>
+
+<!-- Scroll & Interaction Logic -->
+<script>
+        // Parallax Scroll Effect
+        
+
+        // Bottom Sheet Logic
+        function toggleBottomSheet(sheetId) {
+            const sheet = document.getElementById(sheetId);
+            const backdrop = document.getElementById('sheet-backdrop');
+            
+            if (sheet.classList.contains('open')) {
+                // Close
+                sheet.classList.remove('open');
+                backdrop.classList.remove('open');
+                document.body.style.overflow = ''; // Restore scroll
+            } else {
+                // Close any open sheets first
+                closeAllBottomSheets();
+                
+                // Open the requested one
+                sheet.classList.add('open');
+                backdrop.classList.add('open');
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            }
+        }
+        
+        function closeAllBottomSheets() {
+            document.querySelectorAll('.bottom-sheet.open').forEach(s => s.classList.remove('open'));
+            const backdrop = document.getElementById('sheet-backdrop');
+            if(backdrop) backdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    </script>
+</body></html>

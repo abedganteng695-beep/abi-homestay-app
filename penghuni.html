@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Manajemen Penghuni</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#86f2e4",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#bec6e0",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#89f5e7",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        // Custom Brand Colors based on prompt mapping
+                        "brand-deep-blue": "#0F172A",
+                        "brand-teal": "#0D9488",
+                        "brand-amber": "#F59E0B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "safe": "env(safe-area-inset-bottom, 20px)"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    },
+                    "animation": {
+                        "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "bounce-gentle": "bounceGentle 2s infinite"
+                    },
+                    "keyframes": {
+                        "slideUp": {
+                            "0%": { opacity: "0", transform: "translateY(24px)" },
+                            "100%": { opacity: "1", transform: "translateY(0)" }
+                        },
+                        "bounceGentle": {
+                            "0%, 100%": { transform: "translateY(-10%)", animationTimingFunction: "cubic-bezier(0.8,0,1,1)" },
+                            "50%": { transform: "none", animationTimingFunction: "cubic-bezier(0,0,0.2,1)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .stagger-0 { animation-delay: 0.0s; opacity: 0; }
+        .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.15s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-5 { animation-delay: 0.25s; opacity: 0; }
+        .stagger-6 { animation-delay: 0.3s; opacity: 0; }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .swipe-action-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+        .swipe-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 16px;
+            gap: 8px;
+            z-index: 0;
+        }
+        .swipe-content {
+            position: relative;
+            z-index: 1;
+            background: white;
+            transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            touch-action: pan-y left right;
+        }
+        
+        .modal-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .bottom-sheet {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+        
+        .glass-nav {
+            background: rgba(247, 249, 251, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+
+    <!-- Prefetch Other Pages for Instant Navigation -->
+    <link rel="prefetch" href="index.html" />
+    <link rel="prefetch" href="kamar.html" />
+    <link rel="prefetch" href="penghuni.html" />
+    <link rel="prefetch" href="laporan.html" />
+    <link rel="prefetch" href="pengaturan.html" />
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top App Bar (From Shared Components JSON) -->
+<header class="fixed top-0 left-0 w-full z-40 bg-surface/80 dark:bg-surface-container/80 backdrop-blur-md shadow-sm flex justify-between items-center px-md py-sm">
+<div class="flex items-center gap-sm">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed">Daftar Penghuni</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant/20 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="pt-[88px] px-4 md:px-6 max-w-container-max mx-auto">
+<!-- Header & Search -->
+<div class="mb-md animate-slide-up stagger-1">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-secondary transition-colors">search</span>
+<input id="searchInput" class="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-container-low border border-surface-variant text-body-md font-body-md focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-outline" placeholder="Cari nama atau nomor kamar..." type="text"/>
+</div>
+</div>
+<!-- Filter Chips (Horizontal Scroll) -->
+<div class="flex overflow-x-auto hide-scrollbar gap-sm mb-md pb-2 -mx-4 px-4 md:mx-0 md:px-0" id="filterChips">
+<button data-filter="semua" class="filter-chip shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-brand-teal text-white shadow-[0_4px_12px_rgba(13,148,136,0.2)] transition-all">Semua</button>
+<button data-filter="aktif" class="filter-chip shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-variant transition-all">Aktif</button>
+<button data-filter="akan_jatuh_tempo" class="filter-chip shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-variant transition-all">Akan Jatuh Tempo</button>
+<button data-filter="non_aktif" class="filter-chip shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant hover:bg-surface-variant transition-all">Non-aktif</button>
+</div>
+<!-- Tenant List -->
+<div class="space-y-4" id="tenantList">
+<!-- Card 1: H-2 Jatuh Tempo (Action Required) -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-1" data-status="akan_jatuh_tempo" data-name="Siti Nurhaliza" data-phone="0812-3456-7890" data-room="Kamar 15" data-status-text="H-2 Jatuh Tempo" data-status-class="bg-error-container text-on-error-container" data-date-in="12 Jan 2023" data-date-due="12 Nov 2023" data-rent-type="Bulanan (Rp 2.500.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-error border-2 border-surface animate-pulse-soft"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Siti Nurhaliza</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0812-3456-7890</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 15</span>
+<span class="font-label-sm text-[10px] text-error font-bold tracking-wider uppercase">H-2 Jatuh Tempo</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Aktif -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-2" data-status="aktif" data-name="Budi Santoso" data-phone="0856-7890-1234" data-room="Kamar 08" data-status-text="Aktif" data-status-class="bg-surface-container text-on-surface-variant" data-date-in="05 Mar 2023" data-date-due="05 Des 2023" data-rent-type="Bulanan (Rp 2.000.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#25D366] border-2 border-surface"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Budi Santoso</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0856-7890-1234</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 08</span>
+<span class="font-label-sm text-[10px] text-outline font-bold tracking-wider uppercase">Aktif</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Aktif -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-3" data-status="aktif" data-name="Rina Melati" data-phone="0821-9876-5432" data-room="Kamar 02" data-status-text="Aktif" data-status-class="bg-surface-container text-on-surface-variant" data-date-in="10 Jun 2023" data-date-due="10 Des 2023" data-rent-type="Semesteran (Rp 11.500.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person_4</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#25D366] border-2 border-surface"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Rina Melati</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0821-9876-5432</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 02</span>
+<span class="font-label-sm text-[10px] text-outline font-bold tracking-wider uppercase">Aktif</span>
+</div>
+</div>
+</div>
+<!-- Card 4: Aktif -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-4" data-status="aktif" data-name="Andi Pratama" data-phone="0877-1234-5678" data-room="Kamar 10" data-status-text="Aktif" data-status-class="bg-surface-container text-on-surface-variant" data-date-in="20 Ags 2023" data-date-due="20 Nov 2023" data-rent-type="Bulanan (Rp 2.200.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#25D366] border-2 border-surface"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Andi Pratama</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0877-1234-5678</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 10</span>
+<span class="font-label-sm text-[10px] text-outline font-bold tracking-wider uppercase">Aktif</span>
+</div>
+</div>
+</div>
+<!-- Card 5: H-5 Jatuh Tempo -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-5" data-status="akan_jatuh_tempo" data-name="Dewi Lestari" data-phone="0819-3333-4444" data-room="Kamar 05" data-status-text="H-5 Jatuh Tempo" data-status-class="bg-error-container text-on-error-container" data-date-in="15 Jan 2023" data-date-due="15 Nov 2023" data-rent-type="Bulanan (Rp 2.000.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person_3</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-error border-2 border-surface animate-pulse-soft"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Dewi Lestari</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0819-3333-4444</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 05</span>
+<span class="font-label-sm text-[10px] text-error font-bold tracking-wider uppercase">H-5 Jatuh Tempo</span>
+</div>
+</div>
+</div>
+<!-- Card 6: Non-aktif -->
+<div class="tenant-card swipe-action-wrapper shadow-[0px_4px_20px_rgba(15,23,42,0.05)] rounded-2xl bg-surface-container-low animate-slide-up stagger-6" data-status="non_aktif" data-name="Reza Rahadian" data-phone="0811-2222-3333" data-room="Kamar 03" data-status-text="Non-aktif" data-status-class="bg-surface-variant text-outline" data-date-in="01 Feb 2022" data-date-due="01 Feb 2023" data-rent-type="Tahunan (Rp 22.000.000)" data-image="">
+<div class="swipe-actions">
+<button class="w-12 h-12 rounded-xl bg-[#25D366] text-white flex items-center justify-center shadow-sm">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-xl bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<div class="swipe-content p-4 rounded-2xl flex items-center gap-4 cursor-pointer opacity-75 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+<div class="relative w-14 h-14 shrink-0 bg-surface-variant rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-2xl">person_off</span>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-outline border-2 border-surface"></div>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-md text-body-lg text-primary truncate">Reza Rahadian</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant truncate">0811-2222-3333</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="px-2 py-1 bg-surface-container rounded-md font-label-sm text-label-sm text-primary">Kamar 03</span>
+<span class="font-label-sm text-[10px] text-outline font-bold tracking-wider uppercase">Non-aktif</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-4 md:right-8 w-14 h-14 bg-secondary text-on-secondary rounded-2xl shadow-[0_8px_24px_rgba(13,148,136,0.3)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40 animate-slide-up stagger-3" onclick="openActionSheet()">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<!-- Bottom Nav Bar (From Shared Components JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm pb-safe pt-2 bg-surface/90 dark:bg-surface-container-highest/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<a href="index.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm mt-1">Beranda</span>
+</a>
+<a href="kamar.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all cursor-pointer">
+<span class="material-symbols-outlined">bed</span>
+<span class="font-label-sm text-label-sm mt-1">Kamar</span>
+</a>
+<!-- Active State for 'Penghuni' -->
+<a href="#" class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed bg-secondary-container/30 dark:bg-secondary-fixed-dim/20 rounded-xl px-4 py-1 cursor-pointer animate-bounce-gentle">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-sm text-label-sm mt-1 font-bold">Penghuni</span>
+</a>
+<a href="laporan.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all cursor-pointer">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Laporan</span>
+</a>
+<a href="pengaturan.html" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Pengaturan</span>
+</a>
+</nav>
+<!-- Modal / Bottom Sheet for Profile Details -->
+<div class="fixed inset-0 bg-primary/40 z-[60] modal-overlay backdrop-blur-sm" id="modalOverlay" onclick="closeAllSheets()"></div>
+<div class="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] bottom-sheet shadow-[0_-8px_30px_rgba(0,0,0,0.1)] max-h-[90vh] overflow-y-auto hide-scrollbar pb-safe" id="bottomSheet">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center pt-4 pb-2" onclick="closeAllSheets()">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full cursor-pointer"></div>
+</div>
+<div class="px-6 pb-8">
+<!-- Hero Profile -->
+<div class="flex flex-col items-center mb-6">
+<div id="bs-image-container" class="w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface shadow-md">
+<img loading="lazy" decoding="async" alt="Tenant Detail" class="w-full h-full object-cover" src=""/>
+</div>
+<h2 id="bs-name" class="font-headline-lg text-headline-lg font-bold text-primary text-center">Nama</h2>
+<div class="flex items-center gap-2 mt-1">
+<span id="bs-room" class="px-3 py-1 bg-surface-container rounded-lg font-label-md text-label-md text-on-surface-variant">Kamar --</span>
+<span id="bs-status" class="px-3 py-1 bg-error-container text-on-error-container rounded-lg font-label-md text-label-md font-bold">Status</span>
+</div>
+</div>
+<!-- WhatsApp CTA -->
+<button class="w-full py-4 rounded-xl bg-[#25D366] text-white font-label-md text-label-md flex items-center justify-center gap-2 mb-6 shadow-[0_4px_16px_rgba(37,211,102,0.3)] active:scale-95 transition-transform animate-pulse-soft">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.102.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 3.825 0 6.938 3.112 6.938 6.937 0 3.825-3.113 6.938-6.939 6.938z"></path></svg>
+                Hubungi via WhatsApp
+            </button>
+<!-- Info Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-surface-container-low rounded-2xl p-4 border border-surface-variant">
+<span class="material-symbols-outlined text-outline mb-2">calendar_today</span>
+<p class="font-label-sm text-label-sm text-outline mb-1">Tanggal Masuk</p>
+<p id="bs-date-in" class="font-body-md text-body-md text-primary font-semibold">--</p>
+</div>
+<div class="bg-error-container/20 rounded-2xl p-4 border border-error-container">
+<span class="material-symbols-outlined text-error mb-2">event_busy</span>
+<p class="font-label-sm text-label-sm text-error mb-1">Jatuh Tempo</p>
+<p id="bs-date-due" class="font-body-md text-body-md text-primary font-semibold">--</p>
+</div>
+<div class="col-span-2 bg-surface-container-low rounded-2xl p-4 border border-surface-variant flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-outline mb-1">Tipe Sewa</p>
+<p id="bs-rent-type" class="font-body-md text-body-md text-primary font-semibold">--</p>
+</div>
+<span class="material-symbols-outlined text-secondary">payments</span>
+</div>
+</div>
+
+<div class="flex flex-col gap-4 mt-8">
+<button class="w-full py-3 rounded-xl border border-secondary text-secondary font-label-md text-label-md hover:bg-secondary-container/20 transition-colors">Edit Profil</button>
+<button onclick="closeAllSheets()" class="w-full py-3 rounded-xl bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined text-lg">arrow_back</span>
+    Kembali ke Daftar
+</button>
+</div>
+</div>
+</div>
+
+<!-- Action Bottom Sheet (FAB) -->
+<div class="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] bottom-sheet shadow-[0_-8px_30px_rgba(0,0,0,0.1)] pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl" id="actionSheet">
+    <div class="w-full flex justify-center pt-4 pb-2" onclick="closeAllSheets()">
+        <div class="w-12 h-1.5 bg-outline-variant rounded-full cursor-pointer"></div>
+    </div>
+    <div class="px-6 pb-8 pt-2">
+        <h3 class="font-headline-md text-headline-md text-primary mb-6">Aksi Penghuni</h3>
+        <div class="flex flex-col gap-4">
+            <button class="w-full py-4 px-4 rounded-xl bg-surface-container-low border border-surface-variant flex items-center gap-4 hover:bg-surface-variant transition-colors active:scale-95 text-left" onclick="closeAllSheets()">
+                <div class="w-12 h-12 shrink-0 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl">person_add</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-label-md text-label-md text-primary">Tambah Penghuni</p>
+                    <p class="font-body-md text-label-sm text-on-surface-variant mt-1">Daftarkan penghuni baru ke sistem</p>
+                </div>
+            </button>
+            <button class="w-full py-4 px-4 rounded-xl bg-error-container/20 border border-error-container flex items-center gap-4 hover:bg-error-container/40 transition-colors active:scale-95 text-left" onclick="closeAllSheets()">
+                <div class="w-12 h-12 shrink-0 rounded-full bg-error-container text-error flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl">person_remove</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-label-md text-label-md text-error">Hapus Penghuni</p>
+                    <p class="font-body-md text-label-sm text-on-surface-variant mt-1">Keluarkan penghuni dari sistem</p>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+        // Remove animation glitch for filters
+
+        // Filtering Logic
+        const searchInput = document.getElementById('searchInput');
+        const filterChips = document.querySelectorAll('.filter-chip');
+        const tenantCards = document.querySelectorAll('.tenant-card');
+        
+        let currentStatusFilter = 'semua';
+        
+        function filterTenants() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            tenantCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const textContent = card.innerText.toLowerCase();
+                
+                const matchesSearch = textContent.includes(searchTerm);
+                const matchesStatus = currentStatusFilter === 'semua' || status === currentStatusFilter;
+                
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        searchInput.addEventListener('input', filterTenants);
+        
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                // Update active state of chips
+                filterChips.forEach(c => {
+                    c.classList.remove('bg-brand-teal', 'text-white', 'shadow-[0_4px_12px_rgba(13,148,136,0.2)]');
+                    c.classList.add('bg-surface-container', 'text-on-surface-variant', 'hover:bg-surface-variant');
+                });
+                chip.classList.remove('bg-surface-container', 'text-on-surface-variant', 'hover:bg-surface-variant');
+                chip.classList.add('bg-brand-teal', 'text-white', 'shadow-[0_4px_12px_rgba(13,148,136,0.2)]');
+                
+                currentStatusFilter = chip.getAttribute('data-filter');
+                filterTenants();
+            });
+        });
+
+        // Swipe to reveal logic
+        const swipeContents = document.querySelectorAll('.swipe-content');
+        
+        swipeContents.forEach(content => {
+            let startX = 0;
+            let currentX = 0;
+            let isSwiping = false;
+            const threshold = -80; // Negative because we swipe left
+
+            content.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                content.style.transition = 'none';
+                isSwiping = false;
+            });
+
+            content.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const diff = touch.clientX - startX;
+                
+                if (Math.abs(diff) > 10) {
+                    isSwiping = true;
+                }
+                
+                // Only allow left swipe up to a certain point
+                if (diff < 0 && diff > -120) {
+                    currentX = diff;
+                    content.style.transform = `translateX(${currentX}px)`;
+                }
+            });
+
+            content.addEventListener('touchend', (e) => {
+                content.style.transition = 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+                
+                if (currentX < threshold) {
+                    content.style.transform = 'translateX(-110px)'; // Snap to open
+                } else {
+                    content.style.transform = 'translateX(0)'; // Snap closed
+                }
+                
+                // Handle click without swipe
+                if (!isSwiping && currentX === 0) {
+                    const card = content.closest('.tenant-card');
+                    if(card) openTenantDetails(card);
+                }
+                
+                currentX = 0;
+            });
+        });
+
+        // Bottom Sheet Logic
+        const overlay = document.getElementById('modalOverlay');
+        const sheet = document.getElementById('bottomSheet');
+        const actionSheet = document.getElementById('actionSheet');
+
+        function openBottomSheet() {
+            overlay.classList.add('active');
+            sheet.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function openActionSheet() {
+            overlay.classList.add('active');
+            actionSheet.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAllSheets() {
+            overlay.classList.remove('active');
+            sheet.classList.remove('active');
+            actionSheet.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openTenantDetails(card) {
+            // Remove glitchy animation states on click
+            
+            
+            
+            const name = card.getAttribute('data-name');
+            const phone = card.getAttribute('data-phone');
+            const room = card.getAttribute('data-room');
+            const statusText = card.getAttribute('data-status-text');
+            const statusClass = card.getAttribute('data-status-class');
+            const dateIn = card.getAttribute('data-date-in');
+            const dateDue = card.getAttribute('data-date-due');
+            const rentType = card.getAttribute('data-rent-type');
+            const image = card.getAttribute('data-image');
+            
+            document.getElementById('bs-name').innerText = name;
+            document.getElementById('bs-room').innerText = room;
+            document.getElementById('bs-status').innerText = statusText;
+            document.getElementById('bs-status').className = `px-3 py-1 rounded-lg font-label-md text-label-md font-bold ${statusClass}`;
+            
+            document.getElementById('bs-date-in').innerText = dateIn;
+            document.getElementById('bs-date-due').innerText = dateDue;
+            document.getElementById('bs-rent-type').innerText = rentType;
+            
+            const imgContainer = document.getElementById('bs-image-container');
+            if (image) {
+                imgContainer.innerHTML = `<img loading="lazy" decoding="async" src="${image}" class="w-full h-full object-cover">`;
+                imgContainer.className = "w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface shadow-md";
+            } else {
+                imgContainer.innerHTML = `<span class="material-symbols-outlined text-4xl text-outline">person</span>`;
+                imgContainer.className = "w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-surface shadow-md bg-surface-variant flex items-center justify-center";
+            }
+            
+            openBottomSheet();
+        }
+    </script>
+</body></html>

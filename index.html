@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abi Homestay Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#86f2e4",
+                        "surface-bright": "#f7f9fb",
+                        "inverse-primary": "#bec6e0",
+                        "outline": "#76777d",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-primary-container": "#7c839b",
+                        "tertiary": "#000000",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#131b2e",
+                        "surface-tint": "#565e74",
+                        "on-tertiary-container": "#b87500",
+                        "on-primary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#89f5e7",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-surface-variant": "#45464d",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#2a1700",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#2a1700",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c6c6cd",
+                        "primary": "#000000",
+                        "on-tertiary": "#ffffff",
+                        // Custom Brand Colors based on prompt mapping
+                        "brand-deep-blue": "#0F172A",
+                        "brand-teal": "#0D9488",
+                        "brand-amber": "#F59E0B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "xl": "64px",
+                        "base": "8px",
+                        "safe": "env(safe-area-inset-bottom, 20px)"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    },
+                    "animation": {
+                        "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "bounce-gentle": "bounceGentle 2s infinite"
+                    },
+                    "keyframes": {
+                        "slideUp": {
+                            "0%": { opacity: "0", transform: "translateY(24px)" },
+                            "100%": { opacity: "1", transform: "translateY(0)" }
+                        },
+                        "bounceGentle": {
+                            "0%, 100%": { transform: "translateY(-10%)", animationTimingFunction: "cubic-bezier(0.8,0,1,1)" },
+                            "50%": { transform: "none", animationTimingFunction: "cubic-bezier(0,0,0.2,1)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .micro-glow-teal { box-shadow: 0px 0px 15px rgba(13, 148, 136, 0.15); }
+        .micro-glow-blue { box-shadow: 0px 0px 15px rgba(15, 23, 42, 0.1); }
+        .micro-glow-amber { box-shadow: 0px 0px 15px rgba(245, 158, 11, 0.15); }
+        .micro-glow-red { box-shadow: 0px 0px 15px rgba(220, 38, 38, 0.15); }
+        
+
+
+        .stagger-0 { animation-delay: 0.0s; opacity: 0; }
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+
+        /* Donut Chart CSS */
+        .donut-segment {
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+
+    <!-- Prefetch Other Pages for Instant Navigation -->
+    <link rel="prefetch" href="index.html" />
+    <link rel="prefetch" href="kamar.html" />
+    <link rel="prefetch" href="penghuni.html" />
+    <link rel="prefetch" href="laporan.html" />
+    <link rel="prefetch" href="pengaturan.html" />
+</head>
+<body class="bg-background text-on-background pb-32">
+<!-- Splash Screen -->
+<div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-brand-deep-blue transition-opacity duration-700">
+    <div class="flex flex-col items-center animate-pulse">
+        <div class="w-20 h-20 bg-brand-teal rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(13,148,136,0.4)] mb-4">
+            <span class="material-symbols-outlined text-white text-5xl" data-icon="home_work">home_work</span>
+        </div>
+        <h1 class="font-headline-lg text-white tracking-tight">Abi Homestay</h1>
+        <p class="font-body-md text-brand-teal mt-2">Manajemen Kost Mudah</p>
+    </div>
+</div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-md py-sm bg-surface/80 backdrop-blur-md shadow-sm transition-colors duration-200">
+<div class="flex items-center gap-sm">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">Beranda</h1>
+<p class="font-body-md text-sm text-on-surface-variant">Senin, 24 Mei 2024</p>
+</div>
+</div>
+<button class="relative p-2 rounded-full hover:bg-surface-variant/20 transition-all duration-300 group">
+<span class="material-symbols-outlined text-primary group-hover:text-secondary transition-colors duration-300" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface animate-pulse"></span>
+</button>
+</header>
+<main class="pt-[88px] px-4 md:hidden">
+<!-- Stat Cards Grid -->
+<section class="grid grid-cols-2 gap-4 mb-8">
+<!-- Total Kamar -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] flex flex-col justify-between micro-glow-blue transition-all duration-300 hover:scale-[1.02] animate-slide-up stagger-1">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-brand-deep-blue" data-icon="meeting_room">meeting_room</span>
+</div>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant">Total Kamar</p>
+<p class="font-display-lg text-display-lg text-brand-deep-blue mt-1 counter" data-target="58">0</p>
+</div>
+</div>
+<!-- Terisi -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] flex flex-col justify-between micro-glow-teal transition-all duration-300 hover:scale-[1.02] animate-slide-up stagger-2">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-brand-teal" data-icon="bed">bed</span>
+</div>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant">Terisi</p>
+<p class="font-display-lg text-display-lg text-brand-teal mt-1 counter" data-target="42">0</p>
+</div>
+</div>
+<!-- Kosong -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] flex flex-col justify-between micro-glow-amber transition-all duration-300 hover:scale-[1.02] animate-slide-up stagger-3">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-brand-amber animate-pulse-slow" data-icon="key">key</span>
+</div>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant">Kosong</p>
+<p class="font-display-lg text-display-lg text-brand-amber mt-1 counter" data-target="12">0</p>
+</div>
+</div>
+<!-- Perlu Perbaikan -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] flex flex-col justify-between micro-glow-red transition-all duration-300 hover:scale-[1.02] animate-slide-up stagger-4">
+<div class="flex justify-between items-start mb-2">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error animate-pulse-slow" data-icon="build">build</span>
+</div>
+</div>
+<div>
+<p class="font-label-md text-on-surface-variant">Perbaikan</p>
+<p class="font-display-lg text-display-lg text-error mt-1 counter" data-target="4">0</p>
+</div>
+</div>
+</section>
+<!-- Jatuh Tempo & Perhatian Section -->
+<section class="mb-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-4 animate-slide-up stagger-2">Jatuh Tempo &amp; Perhatian</h2>
+<div class="flex flex-col gap-3">
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center justify-between border-l-4 border-brand-amber animate-slide-up stagger-2 micro-glow-amber transition-all duration-300 hover:-translate-y-1">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-tertiary-fixed rounded-full text-brand-amber">
+<span class="material-symbols-outlined animate-pulse-slow" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="font-label-md text-primary">Kamar 12</p>
+<p class="font-label-sm text-on-surface-variant">H-3 Jatuh Tempo</p>
+</div>
+</div>
+<button class="px-3 py-1 bg-surface-container rounded-lg font-label-sm text-primary hover:bg-surface-variant transition-all duration-300 active:scale-95">Ingatkan</button>
+</div>
+
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex items-center justify-between border-l-4 border-error animate-slide-up stagger-4 micro-glow-red transition-all duration-300 hover:-translate-y-1">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-error-container rounded-full text-error">
+<span class="material-symbols-outlined animate-pulse-slow" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<p class="font-label-md text-primary">Kamar 45</p>
+<p class="font-label-sm text-on-surface-variant">Laporan: AC Bocor</p>
+</div>
+</div>
+<button class="px-3 py-1 bg-surface-container rounded-lg font-label-sm text-primary hover:bg-surface-variant transition-all duration-300 active:scale-95">Detail</button>
+</div>
+</div>
+</section>
+<!-- Status Kamar Visualization -->
+<section class="mb-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-4 animate-slide-up stagger-3">Status Kamar</h2>
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-[0px_4px_20px_rgba(15,23,42,0.05)] animate-slide-up stagger-4">
+<div class="flex flex-col items-center">
+<!-- CSS Donut Chart representation -->
+<div class="relative w-40 h-40 mb-6">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<!-- Background Circle -->
+<path class="text-surface-container stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<!-- Filled (72%) -->
+<path class="text-brand-teal stroke-current donut-segment" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" data-dash="72, 100" data-offset="0" fill="none" stroke-dasharray="0, 100" stroke-width="3"></path>
+<!-- Empty (21%) -->
+<path class="text-brand-amber stroke-current donut-segment" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" data-dash="21, 100" data-offset="-72" fill="none" stroke-dasharray="0, 100" stroke-dashoffset="-72" stroke-width="3"></path>
+<!-- Maintenance (7%) -->
+<path class="text-error stroke-current donut-segment" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" data-dash="7, 100" data-offset="-93" fill="none" stroke-dasharray="0, 100" stroke-dashoffset="-93" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-lg-mobile text-brand-deep-blue counter" data-target="72">0</span><span class="font-headline-lg-mobile text-brand-deep-blue">%</span>
+<span class="font-label-sm text-on-surface-variant">Okupansi</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="w-full flex justify-between px-2">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-brand-teal"></div>
+<span class="font-label-sm">Terisi (42)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-brand-amber"></div>
+<span class="font-label-sm">Kosong (12)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="font-label-sm">Perbaikan (4)</span>
+</div>
+</div>
+</div>
+<!-- Mini Bar Chart (Fake) -->
+<div class="mt-6 pt-6 border-t border-surface-container-high">
+<p class="font-label-sm text-on-surface-variant mb-4 text-center">Trend Okupansi 5 Bulan Terakhir</p>
+<div class="flex justify-between items-end h-20 px-2">
+<div class="w-8 bg-brand-teal/40 rounded-t-sm h-[60%] hover:bg-brand-teal transition-all duration-300 hover:scale-y-105 origin-bottom"></div>
+<div class="w-8 bg-brand-teal/40 rounded-t-sm h-[65%] hover:bg-brand-teal transition-all duration-300 hover:scale-y-105 origin-bottom"></div>
+<div class="w-8 bg-brand-teal/60 rounded-t-sm h-[50%] hover:bg-brand-teal transition-all duration-300 hover:scale-y-105 origin-bottom"></div>
+<div class="w-8 bg-brand-teal/80 rounded-t-sm h-[70%] hover:bg-brand-teal transition-all duration-300 hover:scale-y-105 origin-bottom"></div>
+<div class="w-8 bg-brand-teal rounded-t-sm h-[72%] micro-glow-teal hover:scale-y-105 origin-bottom transition-all duration-300"></div>
+</div>
+<div class="flex justify-between px-2 mt-2 font-label-sm text-on-surface-variant">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mei</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Actions Row -->
+<section class="mb-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-4 animate-slide-up stagger-4">Aksi Cepat</h2>
+<div class="grid grid-cols-2 gap-4 animate-slide-up stagger-4">
+<a href="penghuni.html" class="bg-gradient-to-br from-brand-teal to-[#0f766e] text-on-primary rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-sm transition-transform duration-200 active:scale-95 micro-glow-teal">
+<span class="material-symbols-outlined text-3xl" data-icon="person_add">person_add</span>
+<span class="font-label-md text-center">Tambah Penghuni</span>
+</a>
+<a href="laporan.html" class="bg-gradient-to-br from-brand-deep-blue to-[#1e293b] text-on-primary rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-sm transition-transform duration-200 active:scale-95 micro-glow-blue">
+<span class="material-symbols-outlined text-3xl" data-icon="request_quote">request_quote</span>
+<span class="font-label-md text-center">Catat Pembayaran</span>
+</a>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm pb-safe pt-2 bg-surface/90 backdrop-blur-xl shadow-[0px_-4px_20px_rgba(15,23,42,0.05)] rounded-t-xl md:hidden">
+<!-- Active Tab: Beranda -->
+<a href="#" class="flex flex-col items-center justify-center text-secondary bg-secondary-container/30 rounded-xl px-4 py-1 animate-bounce-gentle">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm mt-1">Beranda</span>
+</a>
+<a href="kamar.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="bed">bed</span>
+<span class="font-label-sm text-label-sm mt-1">Kamar</span>
+</a>
+<a href="penghuni.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm mt-1">Penghuni</span>
+</a>
+<a href="laporan.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Laporan</span>
+</a>
+<a href="pengaturan.html" class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-secondary-fixed-variant transition-all duration-300 hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Pengaturan</span>
+</a>
+</nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Splash Screen Logic
+        const splashScreen = document.getElementById('splash-screen');
+        if (splashScreen) {
+            if (!sessionStorage.getItem('splashShown')) {
+                setTimeout(() => {
+                    splashScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        splashScreen.remove();
+                    }, 700);
+                }, 1500);
+                sessionStorage.setItem('splashShown', 'true');
+            } else {
+                splashScreen.remove();
+            }
+        }
+
+        // Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // The lower the slower
+
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 10);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            
+            // Start counter with a slight delay to match enter animation
+            setTimeout(updateCount, 400); 
+        });
+
+        // Donut Chart Animation
+        setTimeout(() => {
+            const segments = document.querySelectorAll('.donut-segment');
+            segments.forEach(segment => {
+                const dash = segment.getAttribute('data-dash');
+                if(dash) {
+                    segment.setAttribute('stroke-dasharray', dash);
+                }
+            });
+        }, 500);
+    });
+</script>
+</body></html>
