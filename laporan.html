@@ -374,6 +374,23 @@
 <div class="overflow-y-auto px-6 py-6 space-y-5">
 <!-- Form Fields -->
 <div>
+<label class="block text-label-md text-on-surface-variant mb-2">Kategori Transaksi</label>
+<div class="flex gap-3">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="transaction_type" type="radio" value="masuk"/>
+<div class="rounded-xl border border-outline-variant px-4 py-3 text-center text-body-md font-medium text-outline peer-checked:border-secondary peer-checked:bg-secondary/10 peer-checked:text-secondary transition-colors">
+                                Uang Masuk
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="transaction_type" type="radio" value="keluar"/>
+<div class="rounded-xl border border-outline-variant px-4 py-3 text-center text-body-md font-medium text-outline peer-checked:border-error peer-checked:bg-error/10 peer-checked:text-error transition-colors">
+                                Uang Keluar
+                            </div>
+</label>
+</div>
+</div>
+<div>
 <label class="block text-label-md text-on-surface-variant mb-2">Pilih Penghuni</label>
 <div class="relative">
 <select class="w-full appearance-none rounded-xl border border-outline-variant bg-surface px-4 py-3 text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none">
@@ -419,7 +436,7 @@
 <input class="w-full rounded-xl border border-outline-variant bg-surface px-4 py-3 text-body-lg font-semibold text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none" placeholder="0" type="number"/>
 </div>
 <div>
-<label class="block text-label-md text-on-surface-variant mb-2">Upload Bukti Transfer</label>
+<label class="block text-label-md text-on-surface-variant mb-2">Upload Bukti Transaksi</label>
 <div class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center bg-surface-container-lowest cursor-pointer hover:bg-surface-container-low transition-colors">
 <div class="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center mb-3">
 <span class="material-symbols-outlined">cloud_upload</span>
