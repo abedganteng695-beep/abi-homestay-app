@@ -1,0 +1,98 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum TenantStatus {
+  ACTIVE
+  EXPIRING_SOON
+  INACTIVE
+}
+
+enum RentType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  SEMESTERLY
+  YEARLY
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum PaymentMethod {
+  TRANSFER
+  QRIS
+  CASH
+}
+
+model Room {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  number       String        @unique
+  status       RoomStatus    @default(AVAILABLE)
+  inventories  Json?
+  tenant       Tenant?
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Tenant {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  phone        String
+  roomId       String        @unique @db.ObjectId
+  room         Room          @relation(fields: [roomId], references: [id])
+  status       TenantStatus  @default(ACTIVE)
+  dateIn       DateTime      @default(now())
+  dateDue      DateTime?
+  rentType     RentType      @default(MONTHLY)
+  rentAmount   Float         @default(2500000)
+  imageUrl     String?
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Transaction {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  refId         String          @unique
+  type          TransactionType @default(INCOME)
+  tenantId      String?         @db.ObjectId
+  tenant        Tenant?         @relation(fields: [tenantId], references: [id])
+  roomId        String?         @db.ObjectId
+  room          Room?           @relation(fields: [roomId], references: [id])
+  rentType      RentType?
+  amount        Float
+  paymentMethod PaymentMethod   @default(TRANSFER)
+  proofUrl      String?
+  date          DateTime        @default(now())
+  createdAt     DateTime        @default(now())
+}
+
+model Pricing {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  dailyPrice   Float    @default(150000)
+  weeklyPrice  Float    @default(900000)
+  monthlyPrice Float    @default(2500000)
+  yearlyPrice  Float    @default(28000000)
+  updatedAt    DateTime @updatedAt
+}
+
+model Setting {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  autoWhatsappReminders Boolean  @default(true)
+  updatedAt             DateTime @updatedAt
+}

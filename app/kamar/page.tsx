@@ -1,0 +1,293 @@
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { getRooms, updateRoomInventory } from "../actions";
+
+interface Tenant {
+  id: string;
+  name: string;
+  phone: string;
+  dateIn: Date;
+  dateDue: Date | null;
+}
+
+interface Room {
+  id: string;
+  number: string;
+  status: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE";
+  inventories: any;
+  tenant?: Tenant | null;
+}
+
+const INVENTORY_ITEMS = [
+  { name: "AC Panasonic 1/2 PK", icon: "ac_unit" },
+  { name: "TV LED 32\"", icon: "tv" },
+  { name: "Kasur Springbed", icon: "bed" },
+  { name: "Kunci Pintu Pintar", icon: "door_front" },
+  { name: "Tembok Kamar", icon: "format_paint" },
+];
+
+// helper --------------------------------------------------------------------------
+// function Halaman Manajemen Kamar
+// input param : none
+// output : React Client Component JSX
+// end of helper ------------------------------------------------------------------
+export default function KamarPage() {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [search, setSearch] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [inventoryStates, setInventoryStates] = useState<string[]>(["baik", "baik", "baik", "baik", "baik"]);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    const data = await getRooms();
+    setRooms(data as Room[]);
+  };
+
+  const openModal = (room: Room) => {
+    setSelectedRoom(room);
+    if (Array.isArray(room.inventories)) {
+      setInventoryStates(room.inventories);
+    } else {
+      setInventoryStates(["baik", "baik", "baik", "baik", "baik"]);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedRoom(null);
+  };
+
+  const handleToggleInventory = (index: number, state: string) => {
+    const newStates = [...inventoryStates];
+    newStates[index] = state;
+    setInventoryStates(newStates);
+  };
+
+  const handleSaveChanges = () => {
+    if (!selectedRoom) return;
+
+    const hasDamage = inventoryStates.some((s) => s === "perbaikan");
+    let newStatus: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE" = selectedRoom.status;
+
+    if (hasDamage) {
+      newStatus = "MAINTENANCE";
+    } else if (selectedRoom.status === "MAINTENANCE") {
+      newStatus = selectedRoom.tenant ? "OCCUPIED" : "AVAILABLE";
+    }
+
+    startTransition(async () => {
+      await updateRoomInventory(selectedRoom.id, inventoryStates, newStatus);
+      await fetchRooms();
+      closeModal();
+    });
+  };
+
+  const filteredRooms = rooms.filter((r) =>
+    r.number.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pt-24 md:pt-6 pb-24 md:ml-64 flex flex-col min-h-screen">
+      {/* Desktop Header */}
+      <div className="hidden md:flex justify-between items-end mb-6 pt-4">
+        <div>
+          <h1 className="font-headline-lg text-headline-lg text-primary tracking-tight">
+            Manajemen Kamar
+          </h1>
+          <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+            24 Mei 2024
+          </p>
+        </div>
+      </div>
+
+      {/* Search & Filter Controls */}
+      <div className="flex gap-sm mb-md shrink-0">
+        <div className="relative flex-1">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">
+            search
+          </span>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-[#F1F5F9] border border-outline-variant/30 rounded-xl py-3 pl-10 pr-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors placeholder:font-body-md placeholder:text-on-surface-variant/60"
+            placeholder="Cari No. Kamar..."
+            type="text"
+          />
+        </div>
+        <button className="shrink-0 w-12 h-12 bg-white rounded-xl border border-outline-variant/30 flex items-center justify-center text-primary shadow-sm hover:shadow-md transition-shadow press-effect">
+          <span className="material-symbols-outlined">tune</span>
+        </button>
+      </div>
+
+      {/* Room Grid */}
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-sm md:gap-4">
+          {filteredRooms.map((room, idx) => {
+            let stateClass = "state-available";
+            let iconBg = "bg-[#0D9488]/10 text-[#0D9488]";
+            let iconName = "check_circle";
+
+            if (room.status === "MAINTENANCE") {
+              stateClass = "state-maintenance";
+              iconBg = "bg-[#F59E0B]/10 text-[#D97706]";
+              iconName = "build";
+            } else if (room.status === "OCCUPIED") {
+              stateClass = "state-occupied";
+              iconBg = "bg-[#0D9488]/10 text-[#0D9488]";
+              iconName = "person";
+            }
+
+            const delay = (idx * 0.01).toFixed(2);
+
+            return (
+              <div
+                key={room.id}
+                onClick={() => openModal(room)}
+                className={`room-card ${stateClass} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer`}
+                style={{ animationDelay: `${delay}s` }}
+              >
+                <span className="font-headline-lg text-headline-lg font-bold text-primary mb-2">
+                  {room.number}
+                </span>
+
+                <div className={`w-8 h-8 rounded-full ${iconBg} flex items-center justify-center`}>
+                  <span className="material-symbols-outlined text-[18px]">
+                    {iconName}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Modal Overlay */}
+      {selectedRoom && (
+        <div
+          className="fixed inset-0 bg-primary/40 backdrop-blur-sm z-[60] transition-opacity"
+          onClick={closeModal}
+        ></div>
+      )}
+
+      {/* Bottom Modal */}
+      {selectedRoom && (
+        <div className="fixed bottom-0 left-0 w-full bg-surface rounded-t-3xl z-[70] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:w-[500px] md:left-1/2 md:-translate-x-1/2 md:bottom-md md:rounded-3xl max-h-[795px] flex flex-col animate-slide-up">
+          <div className="w-12 h-1.5 bg-outline-variant/50 rounded-full mx-auto mt-3 mb-2 shrink-0 md:hidden"></div>
+
+          <div className="px-md py-4 flex justify-between items-center border-b border-surface-variant shrink-0">
+            <div>
+              <h2 className="font-headline-md text-headline-md text-primary">
+                Kamar {selectedRoom.number}
+              </h2>
+              <span
+                className={`inline-block px-2 py-0.5 rounded text-xs font-semibold mt-1 ${
+                  selectedRoom.status === "OCCUPIED"
+                    ? "bg-surface-container text-primary-container"
+                    : selectedRoom.status === "AVAILABLE"
+                    ? "bg-[#0D9488]/10 text-[#0D9488]"
+                    : "bg-[#F59E0B]/10 text-[#D97706]"
+                }`}
+              >
+                {selectedRoom.status === "OCCUPIED"
+                  ? "Terisi"
+                  : selectedRoom.status === "AVAILABLE"
+                  ? "Tersedia"
+                  : "Perbaikan"}
+              </span>
+            </div>
+            <button
+              onClick={closeModal}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant transition-colors"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+
+          <div className="p-md overflow-y-auto no-scrollbar flex-1 space-y-6">
+            {/* Tenant Info (Conditional) */}
+            {selectedRoom.tenant && (
+              <div>
+                <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
+                  Informasi Penghuni
+                </h3>
+                <div className="bg-white rounded-xl p-4 shadow-sm border border-outline-variant/20 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center font-headline-md">
+                    <span className="material-symbols-outlined">person</span>
+                  </div>
+                  <div>
+                    <p className="font-body-md text-body-md text-primary font-semibold">
+                      {selectedRoom.tenant.name}
+                    </p>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant mt-0.5">
+                      {selectedRoom.tenant.phone}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Inventory & Condition */}
+            <div>
+              <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">
+                Inventaris &amp; Kondisi
+              </h3>
+              <div className="bg-white rounded-xl border border-outline-variant/20 shadow-sm overflow-hidden divide-y divide-surface-variant/50">
+                {INVENTORY_ITEMS.map((item, idx) => {
+                  const state = inventoryStates[idx] || "baik";
+                  return (
+                    <div key={item.name} className="flex items-center justify-between p-4">
+                      <div className="flex items-center gap-3 text-primary">
+                        <span className="material-symbols-outlined text-outline">
+                          {item.icon}
+                        </span>
+                        <span className="font-body-md text-body-md">{item.name}</span>
+                      </div>
+                      <div className="flex bg-surface-container-low rounded-lg p-1">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleInventory(idx, "baik")}
+                          className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
+                            state === "baik"
+                              ? "font-semibold bg-white shadow-sm text-secondary"
+                              : "font-medium text-on-surface-variant"
+                          }`}
+                        >
+                          Baik
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleInventory(idx, "perbaikan")}
+                          className={`px-3 py-1 rounded-md text-xs transition-all duration-200 ${
+                            state === "perbaikan"
+                              ? "font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm"
+                              : "font-medium text-on-surface-variant"
+                          }`}
+                        >
+                          Perbaikan
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-md pt-2 shrink-0 border-t border-surface-variant bg-surface rounded-b-3xl">
+            <button
+              onClick={handleSaveChanges}
+              disabled={isPending}
+              className="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2"
+            >
+              {isPending ? "Menyimpan..." : "Simpan Perubahan"}
+            </button>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}

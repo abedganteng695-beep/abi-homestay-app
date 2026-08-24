@@ -1,0 +1,389 @@
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { getPricingAndSettings, updatePricing, updateSetting } from "../actions";
+
+interface Pricing {
+  id: string;
+  dailyPrice: number;
+  weeklyPrice: number;
+  monthlyPrice: number;
+  yearlyPrice: number;
+}
+
+interface Setting {
+  id: string;
+  autoWhatsappReminders: boolean;
+}
+
+const FACILITIES_LIST = [
+  "Kamar mandi dalam (shower)",
+  "AC",
+  "TV",
+  "Lemari",
+  "Meja + Kursi",
+  "CCTV",
+  "WIFI",
+  "Dapur umum",
+  "Halaman luas",
+  "Air",
+];
+
+// helper --------------------------------------------------------------------------
+// function Halaman Pengaturan & Operasional
+// input param : none
+// output : React Client Component JSX
+// end of helper ------------------------------------------------------------------
+export default function PengaturanPage() {
+  const [pricing, setPricing] = useState<Pricing | null>(null);
+  const [setting, setSetting] = useState<Setting | null>(null);
+
+  const [activeSheet, setActiveSheet] = useState<"PRICE" | "FACILITIES" | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  // Pricing Form States
+  const [daily, setDaily] = useState("150.000");
+  const [weekly, setWeekly] = useState("900.000");
+  const [monthly, setMonthly] = useState("2.500.000");
+  const [yearly, setYearly] = useState("28.000.000");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await getPricingAndSettings();
+    if (data.pricing) {
+      setPricing(data.pricing);
+      setDaily(data.pricing.dailyPrice.toLocaleString("id-ID"));
+      setWeekly(data.pricing.weeklyPrice.toLocaleString("id-ID"));
+      setMonthly(data.pricing.monthlyPrice.toLocaleString("id-ID"));
+      setYearly(data.pricing.yearlyPrice.toLocaleString("id-ID"));
+    }
+    if (data.setting) {
+      setSetting(data.setting);
+    }
+  };
+
+  const handleToggleAutoWhatsapp = (checked: boolean) => {
+    if (!setting) return;
+    setSetting({ ...setting, autoWhatsappReminders: checked });
+    startTransition(async () => {
+      await updateSetting(setting.id, checked);
+    });
+  };
+
+  const handleSavePricing = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pricing) return;
+
+    const d = parseFloat(daily.replace(/[^0-9]/g, ""));
+    const w = parseFloat(weekly.replace(/[^0-9]/g, ""));
+    const m = parseFloat(monthly.replace(/[^0-9]/g, ""));
+    const y = parseFloat(yearly.replace(/[^0-9]/g, ""));
+
+    startTransition(async () => {
+      await updatePricing(pricing.id, d, w, m, y);
+      setActiveSheet(null);
+      await fetchData();
+    });
+  };
+
+  return (
+    <main className="flex-1 w-full max-w-container-max mx-auto px-4 md:px-6 pb-32 pt-20 md:ml-64">
+      {/* Header Profile */}
+      <section className="flex flex-col items-center justify-center pt-md pb-lg text-center relative z-10 animate-slide-up stagger-1">
+        <h2 className="font-headline-md text-headline-md text-primary-container mb-1">
+          Abi Homestay Pusat
+        </h2>
+        <div className="inline-flex items-center gap-2 bg-secondary text-on-secondary font-label-sm text-label-sm px-3 py-1 rounded-full shadow-sm">
+          Administrator
+        </div>
+      </section>
+
+      {/* Settings Cards */}
+      <div className="space-y-sm md:grid md:grid-cols-2 md:gap-gutter md:space-y-0">
+        {/* Operasional Group */}
+        <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low mb-sm md:mb-0 animate-slide-up stagger-2">
+          <h3 className="font-label-md text-label-md text-on-surface-variant mb-3 px-2 uppercase tracking-wider">
+            Operasional
+          </h3>
+
+          <button
+            onClick={() => setActiveSheet("PRICE")}
+            className="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+                <span className="material-symbols-outlined">sell</span>
+              </div>
+              <div className="text-left">
+                <p className="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">
+                  Master Harga Sewa
+                </p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">
+                  Atur tarif harian s/d tahunan
+                </p>
+              </div>
+            </div>
+            <span className="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">
+              chevron_right
+            </span>
+          </button>
+
+          <div className="w-full h-[1px] bg-surface-container-low my-1 ml-14"></div>
+
+          <button
+            onClick={() => setActiveSheet("FACILITIES")}
+            className="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+                <span className="material-symbols-outlined">chair</span>
+              </div>
+              <div className="text-left">
+                <p className="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">
+                  Fasilitas &amp; Inventaris
+                </p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">
+                  Daftar inventaris default kamar
+                </p>
+              </div>
+            </div>
+            <span className="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">
+              chevron_right
+            </span>
+          </button>
+        </div>
+
+        {/* Sistem Group */}
+        <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low animate-slide-up stagger-3">
+          <h3 className="font-label-md text-label-md text-on-surface-variant mb-3 px-2 uppercase tracking-wider">
+            Sistem &amp; Keamanan
+          </h3>
+
+          <div className="w-full flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container">
+                <span className="material-symbols-outlined">notifications_active</span>
+              </div>
+              <div className="text-left">
+                <p className="font-body-md text-body-md font-medium text-primary-container">
+                  Auto-WhatsApp Reminders
+                </p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">
+                  Tagihan &amp; info otomatis
+                </p>
+              </div>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+              <input
+                type="checkbox"
+                id="toggle1"
+                checked={setting?.autoWhatsappReminders || false}
+                onChange={(e) => handleToggleAutoWhatsapp(e.target.checked)}
+                className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer z-10 top-1 left-1 checked:left-auto checked:right-1"
+                style={{
+                  borderColor: "#f2f4f6",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                }}
+              />
+              <label
+                htmlFor="toggle1"
+                className="toggle-label block overflow-hidden h-8 rounded-full bg-surface-container-low cursor-pointer"
+              ></label>
+            </div>
+          </div>
+
+          <div className="w-full h-[1px] bg-surface-container-low my-1 ml-14"></div>
+
+          <button className="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+                <span className="material-symbols-outlined">shield</span>
+              </div>
+              <div className="text-left">
+                <p className="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">
+                  Keamanan Akun
+                </p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant">
+                  Password &amp; Akses staf
+                </p>
+              </div>
+            </div>
+            <span className="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">
+              chevron_right
+            </span>
+          </button>
+        </div>
+
+        {/* Support Group */}
+        <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(15,23,42,0.05)] p-sm border border-surface-container-low md:col-span-2 mt-sm md:mt-0 animate-slide-up stagger-4">
+          <button className="menu-item w-full flex items-center justify-between p-3 rounded-lg hover:premium-glow group bg-surface-container-lowest">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary-container/5 flex items-center justify-center text-primary-container group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+                <span className="material-symbols-outlined">help</span>
+              </div>
+              <div className="text-left">
+                <p className="font-body-md text-body-md font-medium text-primary-container group-hover:text-secondary transition-colors">
+                  Pusat Bantuan
+                </p>
+              </div>
+            </div>
+            <span className="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">
+              chevron_right
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      {activeSheet && (
+        <div
+          onClick={() => setActiveSheet(null)}
+          className="fixed inset-0 bg-primary-container/40 z-[60] backdrop-blur-sm transition-opacity"
+        ></div>
+      )}
+
+      {/* Bottom Sheet: Master Harga Sewa */}
+      {activeSheet === "PRICE" && (
+        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+          <div
+            className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
+            onClick={() => setActiveSheet(null)}
+          ></div>
+          <div className="px-md pb-6">
+            <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-secondary">sell</span>
+              Master Harga Sewa
+            </h2>
+
+            <form onSubmit={handleSavePricing} className="space-y-4">
+              <div>
+                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Tarif Harian
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                    Rp
+                  </span>
+                  <input
+                    type="text"
+                    value={daily}
+                    onChange={(e) => setDaily(e.target.value)}
+                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Tarif Mingguan
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                    Rp
+                  </span>
+                  <input
+                    type="text"
+                    value={weekly}
+                    onChange={(e) => setWeekly(e.target.value)}
+                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Tarif Bulanan
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                    Rp
+                  </span>
+                  <input
+                    type="text"
+                    value={monthly}
+                    onChange={(e) => setMonthly(e.target.value)}
+                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-label-md text-label-md text-on-surface-variant mb-1">
+                  Tarif Tahunan
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant">
+                    Rp
+                  </span>
+                  <input
+                    type="text"
+                    value={yearly}
+                    onChange={(e) => setYearly(e.target.value)}
+                    className="w-full bg-surface rounded-lg border border-surface-container-high py-3 pl-10 pr-4 font-body-md text-primary-container focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-shadow"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveSheet(null)}
+                  className="flex-1 py-3 px-4 rounded-xl border border-primary-container text-primary-container font-label-md text-label-md text-center hover:bg-surface-variant transition-colors"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending}
+                  className="flex-1 py-3 px-4 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md text-center shadow-md shadow-secondary/20 hover:bg-secondary-container hover:text-secondary-fixed-variant transition-colors premium-glow"
+                >
+                  {isPending ? "Menyimpan..." : "Simpan Perubahan"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Sheet: Fasilitas & Inventaris */}
+      {activeSheet === "FACILITIES" && (
+        <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest z-[70] rounded-t-3xl shadow-[0px_-10px_40px_rgba(0,0,0,0.1)] pt-2 pb-safe md:max-w-md md:left-1/2 md:-translate-x-1/2 md:rounded-t-2xl animate-slide-up">
+          <div
+            className="w-12 h-1.5 bg-surface-container-highest rounded-full mx-auto mb-4 cursor-pointer"
+            onClick={() => setActiveSheet(null)}
+          ></div>
+          <div className="px-md pb-6">
+            <h2 className="font-headline-md text-headline-md text-primary-container mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-secondary">chair</span>
+              Fasilitas &amp; Inventaris
+            </h2>
+
+            <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+              {FACILITIES_LIST.map((facility) => (
+                <div key={facility} className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-secondary">check_circle</span>
+                  <span className="font-body-md text-on-surface">{facility}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setActiveSheet(null)}
+                className="flex-1 py-3 px-4 rounded-xl bg-surface-variant text-on-surface-variant font-label-md text-label-md text-center hover:bg-surface-container-high transition-colors"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
