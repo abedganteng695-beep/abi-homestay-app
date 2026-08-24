@@ -149,13 +149,14 @@ export async function getTenants(search: string = "", filter: string = "semua") 
 // end of helper ------------------------------------------------------------------
 export async function addTenant(formData: FormData) {
   try {
-    const name = formData.get("name") as string;
-    const phone = formData.get("phone") as string;
-    const roomNumberRaw = formData.get("roomNumber") as string;
+    const name = (formData.get("name") as string) || "Penghuni Baru";
+    const phone = (formData.get("phone") as string) || "-";
+    const roomNumberRaw = (formData.get("roomNumber") as string) || "";
 
-    const roomNumber = roomNumberRaw.replace(/[^0-9]/g, "").padStart(2, "0");
+    const roomNumberDigits = roomNumberRaw.replace(/[^0-9]/g, "");
+    const roomNumber = roomNumberDigits ? roomNumberDigits.padStart(2, "0") : "01";
 
-    let room = await prisma.room.findUnique({
+    let room = await prisma.room.findFirst({
       where: { number: roomNumber },
     });
 
@@ -175,8 +176,8 @@ export async function addTenant(formData: FormData) {
 
     const newTenant = await prisma.tenant.create({
       data: {
-        name: name || "Penghuni Baru",
-        phone: phone || "-",
+        name,
+        phone,
         roomId: room.id,
         status: "ACTIVE",
         dateIn: new Date(),
@@ -257,18 +258,31 @@ export async function getTransactions() {
 // end of helper ------------------------------------------------------------------
 export async function addTransaction(formData: FormData) {
   try {
-    const tenantId = formData.get("tenantId") as string;
+    const tenantId = (formData.get("tenantId") as string) || "";
     const type = (formData.get("type") as any) || "INCOME";
     const rentType = (formData.get("rentType") as any) || "MONTHLY";
-    const amount = parseFloat((formData.get("amount") as string) || "0");
+    const amountRaw = (formData.get("amount") as string) || "0";
+
+    // Clean currency dots & commas (e.g. "2.500.000" -> 2500000)
+    const amountCleaned = amountRaw.replace(/[^0-9]/g, "");
+    const amount = parseFloat(amountCleaned) || 0;
+
     const file = formData.get("file") as File | null;
 
     let proofUrl = null;
     if (file && file.size > 0) {
-      const blob = await put(`receipts/${Date.now()}-${file.name}`, file, {
-        access: "public",
-      });
-      proofUrl = blob.url;
+      if (file.size > 1 * 1024 * 1024) {
+        console.warn("File size exceeds 1MB limit, skipping upload.");
+      } else {
+        try {
+          const blob = await put(`receipts/${Date.now()}-${file.name}`, file, {
+            access: "public",
+          });
+          proofUrl = blob.url;
+        } catch (blobErr) {
+          console.warn("Vercel Blob upload warning:", blobErr);
+        }
+      }
     }
 
     let roomId = null;
@@ -360,17 +374,29 @@ export async function updatePricing(
   yearlyPrice: number
 ) {
   try {
-    const updated = await prisma.pricing.update({
-      where: { id: pricingId },
-      data: {
-        dailyPrice,
-        weeklyPrice,
-        monthlyPrice,
-        yearlyPrice,
-      },
-    });
+    let pricing = await prisma.pricing.findFirst();
+    if (!pricing) {
+      pricing = await prisma.pricing.create({
+        data: {
+          dailyPrice,
+          weeklyPrice,
+          monthlyPrice,
+          yearlyPrice,
+        },
+      });
+    } else {
+      pricing = await prisma.pricing.update({
+        where: { id: pricing.id },
+        data: {
+          dailyPrice,
+          weeklyPrice,
+          monthlyPrice,
+          yearlyPrice,
+        },
+      });
+    }
     revalidatePath("/pengaturan");
-    return updated;
+    return pricing;
   } catch (error) {
     console.error("Error in updatePricing:", error);
     return null;
@@ -384,14 +410,23 @@ export async function updatePricing(
 // end of helper ------------------------------------------------------------------
 export async function updateSetting(settingId: string, autoWhatsappReminders: boolean) {
   try {
-    const updated = await prisma.setting.update({
-      where: { id: settingId },
-      data: {
-        autoWhatsappReminders,
-      },
-    });
+    let setting = await prisma.setting.findFirst();
+    if (!setting) {
+      setting = await prisma.setting.create({
+        data: {
+          autoWhatsappReminders,
+        },
+      });
+    } else {
+      setting = await prisma.setting.update({
+        where: { id: setting.id },
+        data: {
+          autoWhatsappReminders,
+        },
+      });
+    }
     revalidatePath("/pengaturan");
-    return updated;
+    return setting;
   } catch (error) {
     console.error("Error in updateSetting:", error);
     return null;

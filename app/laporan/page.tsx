@@ -73,10 +73,8 @@ export default function LaporanPage() {
     formData.append("amount", amount);
     
     if (selectedFile) {
-      // Vercel Serverless functions have a hard limit of 4.5MB payload size.
-      // We must validate this client-side otherwise Vercel throws a hard 500 error.
-      if (selectedFile.size > 4 * 1024 * 1024) {
-        alert("Maaf, ukuran gambar terlalu besar (Maksimal 4MB). Silakan kompres atau pilih gambar lain.");
+      if (selectedFile.size > 1 * 1024 * 1024) {
+        alert("Maaf, ukuran gambar terlalu besar (Maksimal 1MB). Silakan kompres atau pilih gambar lain.");
         return;
       }
       formData.append("file", selectedFile);
@@ -387,7 +385,16 @@ export default function LaporanPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      if (file && file.size > 1 * 1024 * 1024) {
+                        alert("Maaf, ukuran gambar terlalu besar (Maksimal 1MB). Silakan kompres atau pilih gambar lain.");
+                        e.target.value = "";
+                        setSelectedFile(null);
+                        return;
+                      }
+                      setSelectedFile(file);
+                    }}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
                   <div className="w-12 h-12 rounded-full bg-secondary/10 text-secondary flex items-center justify-center mb-2">
@@ -396,7 +403,7 @@ export default function LaporanPage() {
                   <p className="text-body-md font-semibold text-on-surface">
                     {selectedFile ? selectedFile.name : "Tap untuk upload gambar"}
                   </p>
-                  <p className="text-label-sm text-outline">JPG, PNG max 4MB</p>
+                  <p className="text-label-sm text-outline">JPG, PNG max 1MB</p>
                 </div>
               </div>
 
