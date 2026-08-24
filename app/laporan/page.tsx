@@ -39,6 +39,7 @@ export default function LaporanPage() {
   const [txType, setTxType] = useState<"INCOME" | "EXPENSE">("INCOME");
   const [selectedTenantId, setSelectedTenantId] = useState("");
   const [paymentType, setPaymentType] = useState("MONTHLY");
+  const [expenseDescription, setExpenseDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -68,7 +69,7 @@ export default function LaporanPage() {
     const formData = new FormData();
     formData.append("type", txType);
     formData.append("tenantId", selectedTenantId);
-    formData.append("rentType", paymentType);
+    formData.append("rentType", txType === "EXPENSE" ? expenseDescription : paymentType);
     formData.append("amount", amount);
     
     if (selectedFile) {
@@ -85,6 +86,7 @@ export default function LaporanPage() {
       await addTransaction(formData);
       setIsModalOpen(false);
       setAmount("");
+      setExpenseDescription("");
       setSelectedFile(null);
       setSelectedTenantId("");
       await fetchData();
@@ -324,34 +326,47 @@ export default function LaporanPage() {
               </div>
 
               <div>
-                <label className="block text-label-md text-on-surface-variant mb-2">Tipe Catatan Pembayaran</label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { key: "MONTHLY", label: "Bulanan" },
-                    { key: "YEARLY", label: "Tahunan" },
-                    { key: "SEMESTERLY", label: "Per Semester" },
-                    { key: "DAILY", label: "Per Hari" },
-                  ].map((item) => (
-                    <label key={item.key} className="cursor-pointer">
-                      <input
-                        type="radio"
-                        name="payment_type"
-                        checked={paymentType === item.key}
-                        onChange={() => setPaymentType(item.key)}
-                        className="sr-only"
-                      />
-                      <div
-                        className={`rounded-xl border px-4 py-3 text-center text-body-md font-medium transition-colors ${
-                          paymentType === item.key
-                            ? "border-secondary bg-secondary/10 text-secondary"
-                            : "border-outline-variant text-outline"
-                        }`}
-                      >
-                        {item.label}
-                      </div>
-                    </label>
-                  ))}
-                </div>
+                <label className="block text-label-md text-on-surface-variant mb-2">
+                  {txType === "INCOME" ? "Tipe Catatan Pembayaran" : "Deskripsi Pengeluaran"}
+                </label>
+                {txType === "INCOME" ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { key: "MONTHLY", label: "Bulanan" },
+                      { key: "YEARLY", label: "Tahunan" },
+                      { key: "SEMESTERLY", label: "Per Semester" },
+                      { key: "DAILY", label: "Per Hari" },
+                    ].map((item) => (
+                      <label key={item.key} className="cursor-pointer">
+                        <input
+                          type="radio"
+                          name="payment_type"
+                          checked={paymentType === item.key}
+                          onChange={() => setPaymentType(item.key)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`rounded-xl border px-4 py-3 text-center text-body-md font-medium transition-colors ${
+                            paymentType === item.key
+                              ? "border-secondary bg-secondary/10 text-secondary"
+                              : "border-outline-variant text-outline"
+                          }`}
+                        >
+                          {item.label}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    required
+                    value={expenseDescription}
+                    onChange={(e) => setExpenseDescription(e.target.value)}
+                    placeholder="Contoh: Perbaikan AC Kamar 12, Tagihan Listrik"
+                    className="w-full rounded-xl border border-outline-variant bg-surface px-4 py-3 text-body-md font-medium text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none"
+                  />
+                )}
               </div>
 
               <div>

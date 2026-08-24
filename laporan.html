@@ -403,8 +403,8 @@
 </div>
 </div>
 <div>
-<label class="block text-label-md text-on-surface-variant mb-2">Tipe Catatan Pembayaran</label>
-<div class="grid grid-cols-2 gap-3">
+<label class="block text-label-md text-on-surface-variant mb-2" id="payment-type-label">Tipe Catatan Pembayaran</label>
+<div class="grid grid-cols-2 gap-3" id="payment-type-grid">
 <label class="cursor-pointer">
 <input checked="" class="peer sr-only" name="payment_type" type="radio" value="bulanan"/>
 <div class="rounded-xl border border-outline-variant px-4 py-3 text-center text-body-md font-medium text-outline peer-checked:border-secondary peer-checked:bg-secondary/10 peer-checked:text-secondary transition-colors">
@@ -430,6 +430,7 @@
                             </div>
 </label>
 </div>
+<input type="text" id="expense-desc-input" placeholder="Contoh: Perbaikan AC Kamar 12, Tagihan Listrik" class="w-full rounded-xl border border-outline-variant bg-surface px-4 py-3 text-body-md font-medium text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none hidden" />
 </div>
 <div>
 <label class="block text-label-md text-on-surface-variant mb-2">Nominal (Rp)</label>
@@ -502,6 +503,26 @@
         btnCatat.addEventListener('click', openModal);
         btnClose.addEventListener('click', closeModal);
         backdrop.addEventListener('click', closeModal);
+
+        // Transaction Type Toggle Logic
+        const txTypeRadios = document.querySelectorAll('input[name="transaction_type"]');
+        const paymentTypeLabel = document.getElementById('payment-type-label');
+        const paymentTypeGrid = document.getElementById('payment-type-grid');
+        const expenseDescInput = document.getElementById('expense-desc-input');
+
+        txTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'keluar') {
+                    paymentTypeLabel.innerText = 'Deskripsi Pengeluaran';
+                    paymentTypeGrid.classList.add('hidden');
+                    expenseDescInput.classList.remove('hidden');
+                } else {
+                    paymentTypeLabel.innerText = 'Tipe Catatan Pembayaran';
+                    paymentTypeGrid.classList.remove('hidden');
+                    expenseDescInput.classList.add('hidden');
+                }
+            });
+        });
 
         // Accordion Logic
         const cards = document.querySelectorAll('.transaction-card');
