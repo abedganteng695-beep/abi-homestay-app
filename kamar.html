@@ -396,7 +396,7 @@
 </div>
 </div>
 <div class="p-md pt-2 shrink-0 border-t border-surface-variant bg-surface rounded-b-3xl">
-<button class="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2">
+<button onclick="saveChanges()" class="w-full bg-secondary text-white font-label-md text-label-md py-3.5 rounded-xl hover:bg-on-secondary-container transition-colors shadow-[0_0_15px_rgba(13,148,136,0.15)] flex items-center justify-center gap-2">
                 Simpan Perubahan
              </button>
 </div>
@@ -436,14 +436,14 @@
             const delay = (i * 0.02).toFixed(2); // Staggered animation delay
 
             const cardHTML = `
-                <div class="room-card ${state.class} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer" 
+                <div id="room-card-${roomNumber}" class="room-card ${state.class} rounded-2xl p-3 flex flex-col items-center justify-center aspect-square press-effect cursor-pointer" 
                      style="animation-delay: ${delay}s"
                      onclick="openModal('${roomNumber}', '${state.id}')">
                     
                     <span class="font-headline-lg text-headline-lg font-bold text-primary mb-2">${roomNumber}</span>
                     
-                    <div class="w-8 h-8 rounded-full ${state.bg} flex items-center justify-center ${state.color}">
-                        <span class="material-symbols-outlined text-[18px]" data-icon="${state.icon}">${state.icon}</span>
+                    <div id="room-icon-container-${roomNumber}" class="w-8 h-8 rounded-full ${state.bg} flex items-center justify-center ${state.color}">
+                        <span id="room-icon-${roomNumber}" class="material-symbols-outlined text-[18px]" data-icon="${state.icon}">${state.icon}</span>
                     </div>
                 </div>
             `;
@@ -457,7 +457,10 @@
         const modalTitle = document.getElementById('modalRoomTitle');
         const modalBadge = document.getElementById('modalRoomStatusBadge');
 
+        window.roomInventoryState = {};
+
         window.openModal = function(roomNumber, stateId) {
+            window.currentRoom = roomNumber;
             modalTitle.innerText = `Kamar ${roomNumber}`;
             
             if(stateId === 'occupied') {
@@ -474,6 +477,24 @@
                 modalBadge.className = "inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#F59E0B]/10 text-[#D97706] mt-1 border border-[#F59E0B]/20";
             }
 
+            const states = window.roomInventoryState[roomNumber] || ['baik', 'baik', 'baik', 'baik', 'baik'];
+            document.querySelectorAll('.inventory-toggle').forEach((group, index) => {
+                const btns = group.querySelectorAll('button');
+                btns.forEach(b => {
+                    b.className = 'px-3 py-1 rounded-md text-xs font-medium text-on-surface-variant transition-all duration-200';
+                });
+                const targetState = states[index];
+                btns.forEach(b => {
+                    if (b.innerText.trim().toLowerCase() === targetState) {
+                        if (targetState === 'baik') {
+                            b.className = 'px-3 py-1 rounded-md text-xs font-semibold bg-white shadow-sm text-secondary transition-all duration-200';
+                        } else {
+                            b.className = 'px-3 py-1 rounded-md text-xs font-semibold bg-[#FEF3C7] text-[#92400E] shadow-sm transition-all duration-200';
+                        }
+                    }
+                });
+            });
+
             modal.classList.add('open');
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -483,6 +504,41 @@
             modal.classList.remove('open');
             overlay.classList.remove('open');
             document.body.style.overflow = '';
+        }
+
+        window.saveChanges = function() {
+            const roomNumber = window.currentRoom;
+            if (!roomNumber) return;
+
+            let hasDamage = false;
+            let inventoryStates = [];
+            document.querySelectorAll('.inventory-toggle').forEach(group => {
+                const activeBtn = group.querySelector('.font-semibold');
+                const state = activeBtn ? activeBtn.innerText.trim().toLowerCase() : 'baik';
+                inventoryStates.push(state);
+                if (state === 'perbaikan') {
+                    hasDamage = true;
+                }
+            });
+
+            window.roomInventoryState[roomNumber] = inventoryStates;
+
+            const iconContainer = document.getElementById(`room-icon-container-${roomNumber}`);
+            const iconSpan = document.getElementById(`room-icon-${roomNumber}`);
+
+            if (iconContainer && iconSpan) {
+                if (hasDamage) {
+                    iconContainer.className = "w-8 h-8 rounded-full bg-[#F59E0B]/10 flex items-center justify-center text-[#D97706]";
+                    iconSpan.innerText = "build";
+                    iconSpan.setAttribute("data-icon", "build");
+                } else {
+                    iconContainer.className = "w-8 h-8 rounded-full bg-[#0D9488]/10 flex items-center justify-center text-[#0D9488]";
+                    iconSpan.innerText = "check_circle";
+                    iconSpan.setAttribute("data-icon", "check_circle");
+                }
+            }
+
+            closeModal();
         }
 
         // Inventory Toggles Logic
