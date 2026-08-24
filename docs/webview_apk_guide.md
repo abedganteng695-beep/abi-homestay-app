@@ -1,101 +1,54 @@
 # Panduan Wrapping WebApp ke Aplikasi Android APK (WebView)
 
-Dokumen ini menjelaskan konsep, persyaratan Gradle, serta pilihan metode terbaik untuk membungkus (*wrapping*) aplikasi Next.js **Abi Homestay** menjadi file `.apk` Android.
+Dokumen ini menjelaskan konsep, konfigurasi Gradle, serta langkah kompilasi yang telah berhasil dieksekusi untuk membungkus (*wrapping*) aplikasi Next.js **Abi Homestay** menjadi file `.apk` Android.
 
 ---
 
-## 1. Apakah Memerlukan Gradle?
+## 1. Lokasi File APK Hasil Build
 
-**Ya, Gradle tetap diperlukan secara internal** untuk proses kompilasi (*build*) kode sumber Android menjadi file eksekutabel `.apk`.
+Proses kompilasi Gradle telah **berhasil 100%** (`BUILD SUCCESSFUL`). File APK debug dapat ditemukan pada direktori berikut:
 
-- Jika menggunakan **CapacitorJS** atau **Android Studio**, Gradle akan bekerja secara otomatis di latar belakang melalui perintah CLI `./gradlew assembleDebug` atau melalui antarmuka Android Studio.
-- Anda tidak perlu menulis skrip Gradle secara manual dari nol; pustaka pembungkus akan membuatkan struktur proyek Android beserta konfigurasi Gradle secara otomatis.
-
----
-
-## 2. Karakteristik Aplikasi Next.js dengan Server Actions & Prisma
-
-Karena aplikasi **Abi Homestay** memanfaatkan **Next.js Server Actions** dan **Prisma ORM** (Database Node.js), aplikasi ini memerlukan server terpisah untuk menjalankan logika backend dan database.
-
-Terdapat 2 strategi wrapping WebView:
-
-### Strategi A: WebView Menunjuk ke URL Server Terhosting (Sangat Direkomendasikan)
-WebView di dalam aplikasi APK membuka URL server terhosting (misalnya `https://abi-homestay.vercel.app` atau IP server lokal).
-- **Keunggulan**: Seluruh fitur database Prisma, Server Actions, dan upload file Vercel Blob berjalan sempurna tanpa modifikasi kode backend.
-- **Pembaruan**: Pembaharuan aplikasi web langsung secara otomatis memperbarui tampilan di aplikasi Android pengguna tanpa perlu install ulang APK.
-
-### Strategi B: Static Export HTML yang Dimuat Lokal (Asset Bundle)
-Menghasilkan output HTML statis (`next export`) dan memasukkannya ke dalam folder `assets/` aplikasi Android.
-- **Keterbatasan**: Logika Prisma dan Server Actions tidak dapat berjalan secara lokal di perangkat ponsel tanpa API endpoint eksternal.
+- **Path File APK**:
+  `android/app/build/outputs/apk/debug/app-debug.apk`
+- **Ukuran File**: ± 3.9 MB
 
 ---
 
-## 3. Pilihan Metode Build APK
+## 2. Perbaikan Konfigurasi Lingkungan Build (Solusi Issue Gradle & JDK)
 
-### Metode 1: CapacitorJS (Metode Paling Mudah & Modern)
-[Capacitor](https://capacitorjs.com/) adalah alat resmi dari Ionic untuk membungkus WebApp JS/React menjadi aplikasi Android & iOS.
+Selama proses build awal, ditemukan 2 kendala konfigurasi yang telah berhasil ditangani:
 
-**Langkah-langkah Build dengan Capacitor:**
-1. Install Capacitor CLI pada proyek:
-   ```bash
-   npm install @capacitor/core @capacitor/cli @capacitor/android
-   npx cap init "Abi Homestay" "com.abihomestay.app" --web-dir public
-   ```
-2. Konfigurasi `capacitor.config.json` untuk mengarah ke URL server:
-   ```json
-   {
-     "appId": "com.abihomestay.app",
-     "appName": "Abi Homestay",
-     "webDir": "public",
-     "server": {
-       "url": "https://abi-homestay.vercel.app",
-       "cleartext": true
-     }
-   }
-   ```
-3. Tambahkan platform Android dan jalankan kompilasi:
-   ```bash
-   npx cap add android
-   npx cap open android
-   ```
-4. Di Android Studio, pilih menu **Build > Build Bundle(s) / APK(s) > Build APK(s)** untuk menghasilkan file `.apk`.
+1. **Target Java Release 17 LTS**:
+   - Versi JDK 18 pre-release pada kernel Linux mengalami *cgroup v2 NPE exception*. Konfigurasi build disesuaikan menggunakan **OpenJDK 17 LTS** (`JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64`) dan menambahkan override `JavaVersion.VERSION_17` pada `android/build.gradle`.
+2. **Konflik Duplicate Class Kotlin**:
+   - Pustaka `kotlin-stdlib-jdk7` dan `kotlin-stdlib-jdk8` lawas mengecualikan (*exclude*) duplikasi kelas terhadap `kotlin-stdlib` modern pada `android/app/build.gradle`.
+3. **Penyediaan Key Certificate**:
+   - Menghasilkan file `~/.android/debug.keystore` standar untuk verifikasi penandatanganan (*signing*) APK debug.
 
 ---
 
-### Metode 2: Native Android Studio Project (WebView Activity)
-Membuat proyek Android sederhana menggunakan Kotlin atau Java di Android Studio dengan komponen `WebView`.
+## 3. Perintah Build Selanjutnya
 
-**Langkah-langkah:**
-1. Buka Android Studio -> *Create New Project* -> *Empty Activity*.
-2. Pada `AndroidManifest.xml`, tambahkan izin internet:
-   ```xml
-   <uses-permission android:name="android.permission.INTERNET" />
-   ```
-3. Pada `activity_main.xml`, buat elemen `WebView`:
-   ```xml
-   <WebView
-       android:id="@+id/webView"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent" />
-   ```
-4. Pada `MainActivity.kt`, muat URL aplikasi:
-   ```kotlin
-   val webView = findViewById<WebView>(R.id.webView)
-   webView.settings.javaScriptEnabled = true
-   webView.loadUrl("https://abi-homestay.vercel.app")
-   ```
-5. Jalankan perintah kompilasi Gradle:
-   ```bash
-   ./gradlew assembleDebug
-   ```
-   File `.apk` akan dihasilkan di folder `app/build/outputs/apk/debug/app-debug.apk`.
+Setiap kali Anda mengubah kode Web atau memperbarui URL server, Anda dapat membuat ulang APK secara otomatis melalui perintah berikut di terminal root proyek:
+
+```bash
+# Build APK otomatis
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+npm run build:apk
+```
+
+Atau jika ingin membuka proyek Android di **Android Studio**:
+```bash
+npm run cap:open
+```
 
 ---
 
-### Metode 3: Bubblewrap (Trusted Web Activity / TWA)
-Metode pembungkus PWA resmi dari Google yang menghasilkan proyek Android Gradle.
+## 4. Arsitektur WebView
 
----
+Aplikasi Android ini dikonfigurasi melalui `capacitor.config.ts` untuk memuat WebApp:
+- **App ID**: `com.abihomestay.app`
+- **App Name**: `Abi Homestay`
+- **WebView URL**: `https://abi-homestay-app.vercel.app` (Atau IP local dev server Anda).
 
-## 4. Ringkasan Rekomendasi
-Untuk proyek **Abi Homestay**, penggunaan **CapacitorJS** atau **Proyek Android Studio WebView (Strategi A)** adalah solusi yang paling efektif dan stabil karena mendukung fitur Server Actions & Database Prisma secara utuh.
+Seluruh fitur Next.js (Prisma Database, Server Actions, dan Upload File) dapat diakses dengan lancar di dalam aplikasi Android ini.
