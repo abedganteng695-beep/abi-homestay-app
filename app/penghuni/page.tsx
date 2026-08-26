@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition, useMemo } from "react";
 import { getTenants, addTenant, deleteTenant } from "../actions";
-import { sanitizePhoneDigits, formatPhoneDisplay, getWhatsAppUrl } from "@/lib/phone";
+import { sanitizePhoneDigits, formatPhoneDisplay, formatLiveInputPhone, getWhatsAppUrl } from "@/lib/phone";
 import { calculateDueDate, formatRentTypeLabel } from "@/lib/rent";
 
 interface Room {
@@ -365,7 +365,7 @@ export default function PenghuniPage() {
                       type="tel"
                       required
                       value={newPhone}
-                      onChange={(e) => setNewPhone(sanitizePhoneDigits(e.target.value))}
+                      onChange={(e) => setNewPhone(formatLiveInputPhone(e.target.value))}
                       className="w-full px-4 py-3 bg-transparent outline-none text-body-md font-body-md"
                       placeholder="8xx-xxxx-xxxx"
                     />

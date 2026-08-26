@@ -192,11 +192,21 @@ export async function addTenant(formData: FormData) {
       });
     }
 
-    const newTenant = await prisma.tenant.create({
-      data: {
+    const newTenant = await prisma.tenant.upsert({
+      where: { roomId: room.id },
+      create: {
         name,
         phone,
         roomId: room.id,
+        status: "ACTIVE",
+        dateIn,
+        dateDue,
+        rentType: rentType as any,
+        rentAmount,
+      },
+      update: {
+        name,
+        phone,
         status: "ACTIVE",
         dateIn,
         dateDue,
