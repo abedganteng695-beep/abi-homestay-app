@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
+import { sanitizePhoneDigits, formatPhoneDisplay } from "@/lib/phone";
+import { calculateDueDate, getRentAmount } from "@/lib/rent";
 
 // helper --------------------------------------------------------------------------
 // function untuk mengambil statistik dashboard beranda dengan try-catch fallback
@@ -120,11 +122,18 @@ export async function getTenants(search: string = "", filter: string = "semua") 
     }
 
     if (search.trim()) {
-      whereCondition.OR = [
+      const sanitizedSearch = sanitizePhoneDigits(search);
+      const searchOrs: any[] = [
         { name: { contains: search, mode: "insensitive" } },
         { phone: { contains: search, mode: "insensitive" } },
         { room: { number: { contains: search, mode: "insensitive" } } },
       ];
+
+      if (sanitizedSearch) {
+        searchOrs.push({ phone: { contains: sanitizedSearch, mode: "insensitive" } });
+      }
+
+      whereCondition.OR = searchOrs;
     }
 
     return await prisma.tenant.findMany({
@@ -150,8 +159,17 @@ export async function getTenants(search: string = "", filter: string = "semua") 
 export async function addTenant(formData: FormData) {
   try {
     const name = (formData.get("name") as string) || "Penghuni Baru";
-    const phone = (formData.get("phone") as string) || "-";
+    const phoneRaw = (formData.get("phone") as string) || "-";
+    const phone = phoneRaw !== "-" ? formatPhoneDisplay(phoneRaw) : "-";
     const roomNumberRaw = (formData.get("roomNumber") as string) || "";
+    const dateInRaw = formData.get("dateIn") as string;
+    const rentType = (formData.get("rentType") as string) || "MONTHLY";
+
+    const dateIn = dateInRaw ? new Date(dateInRaw) : new Date();
+    const dateDue = calculateDueDate(dateIn, rentType);
+
+    const pricing = await prisma.pricing.findFirst();
+    const rentAmount = getRentAmount(rentType, pricing);
 
     const roomNumberDigits = roomNumberRaw.replace(/[^0-9]/g, "");
     const roomNumber = roomNumberDigits ? roomNumberDigits.padStart(2, "0") : "01";
@@ -180,9 +198,10 @@ export async function addTenant(formData: FormData) {
         phone,
         roomId: room.id,
         status: "ACTIVE",
-        dateIn: new Date(),
-        rentType: "MONTHLY",
-        rentAmount: 2500000,
+        dateIn,
+        dateDue,
+        rentType: rentType as any,
+        rentAmount,
       },
     });
 

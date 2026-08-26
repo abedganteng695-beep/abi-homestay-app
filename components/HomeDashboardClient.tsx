@@ -3,6 +3,7 @@
 import Link from "next/link";
 import SplashScreen from "./SplashScreen";
 import AnimatedCounter from "./AnimatedCounter";
+import { getWhatsAppUrl } from "@/lib/phone";
 
 interface DashboardStats {
   totalRooms: number;
@@ -136,7 +137,7 @@ export default function HomeDashboardClient({ stats }: { stats: DashboardStats }
                     </div>
                   </div>
                   <a
-                    href={`https://wa.me/${tenant.phone.replace(/[^0-9]/g, "")}`}
+                    href={getWhatsAppUrl(tenant.phone)}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3 py-1 bg-surface-container rounded-lg font-label-sm text-primary hover:bg-surface-variant transition-all duration-300 active:scale-95 inline-block"

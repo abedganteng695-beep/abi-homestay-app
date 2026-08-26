@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useMemo } from "react";
 import { getTenants, addTenant, deleteTenant } from "../actions";
+import { sanitizePhoneDigits, formatPhoneDisplay, getWhatsAppUrl } from "@/lib/phone";
+import { calculateDueDate, formatRentTypeLabel } from "@/lib/rent";
 
 interface Room {
   id: string;
@@ -38,6 +40,15 @@ export default function PenghuniPage() {
   const [newName, setNewName] = useState("");
   const [newRoom, setNewRoom] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newDateIn, setNewDateIn] = useState(() => new Date().toISOString().split("T")[0]);
+  const [newRentType, setNewRentType] = useState("MONTHLY");
+
+  const calculatedDueDatePreview = useMemo(() => {
+    if (!newDateIn) return null;
+    const d = new Date(newDateIn);
+    if (isNaN(d.getTime())) return null;
+    return calculateDueDate(d, newRentType);
+  }, [newDateIn, newRentType]);
 
   useEffect(() => {
     fetchTenants();
@@ -53,13 +64,17 @@ export default function PenghuniPage() {
     const formData = new FormData();
     formData.append("name", newName);
     formData.append("roomNumber", newRoom);
-    formData.append("phone", newPhone);
+    formData.append("phone", formatPhoneDisplay(newPhone));
+    formData.append("dateIn", newDateIn);
+    formData.append("rentType", newRentType);
 
     startTransition(async () => {
       await addTenant(formData);
       setNewName("");
       setNewRoom("");
       setNewPhone("");
+      setNewDateIn(new Date().toISOString().split("T")[0]);
+      setNewRentType("MONTHLY");
       setIsAddOpen(false);
       await fetchTenants();
     });
@@ -236,7 +251,7 @@ export default function PenghuniPage() {
               </div>
 
               <a
-                href={`https://wa.me/${selectedTenant.phone.replace(/[^0-9]/g, "")}`}
+                href={getWhatsAppUrl(selectedTenant.phone)}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-4 rounded-xl bg-[#25D366] text-white font-label-md text-label-md flex items-center justify-center gap-2 mb-6 shadow-[0_4px_16px_rgba(37,211,102,0.3)] active:scale-95 transition-transform"
@@ -267,7 +282,7 @@ export default function PenghuniPage() {
                   <div>
                     <p className="font-label-sm text-label-sm text-outline mb-1">Tipe Sewa</p>
                     <p className="font-body-md text-body-md text-primary font-semibold">
-                      {selectedTenant.rentType} (Rp {selectedTenant.rentAmount.toLocaleString("id-ID")})
+                      {formatRentTypeLabel(selectedTenant.rentType)} (Rp {selectedTenant.rentAmount.toLocaleString("id-ID")})
                     </p>
                   </div>
                   <span className="material-symbols-outlined text-secondary">payments</span>
@@ -341,15 +356,76 @@ export default function PenghuniPage() {
 
                 <div>
                   <label className="font-label-sm text-on-surface-variant mb-1 block">Nomor HP</label>
+                  <div className="flex items-center w-full rounded-xl bg-surface-container-low border border-surface-variant focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary overflow-hidden transition-all">
+                    <div className="px-3.5 py-3 bg-surface-variant/40 border-r border-surface-variant font-body-md text-primary font-bold select-none flex items-center gap-1.5 shrink-0">
+                      <span className="text-sm">🇮🇩</span>
+                      <span>+62</span>
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      value={newPhone}
+                      onChange={(e) => setNewPhone(sanitizePhoneDigits(e.target.value))}
+                      className="w-full px-4 py-3 bg-transparent outline-none text-body-md font-body-md"
+                      placeholder="8xx-xxxx-xxxx"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-label-sm text-on-surface-variant mb-1 block">Tanggal Masuk</label>
                   <input
-                    type="text"
+                    type="date"
                     required
-                    value={newPhone}
-                    onChange={(e) => setNewPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md"
-                    placeholder="08xx-xxxx-xxxx"
+                    value={newDateIn}
+                    onChange={(e) => setNewDateIn(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-surface-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-body-md font-body-md"
                   />
                 </div>
+
+                <div>
+                  <label className="font-label-sm text-on-surface-variant mb-1.5 block">Tipe Sewa</label>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {[
+                      { key: "MONTHLY", label: "Bulanan" },
+                      { key: "YEARLY", label: "Tahunan" },
+                      { key: "SEMESTERLY", label: "Per Semester" },
+                      { key: "DAILY", label: "Per Hari" },
+                    ].map((item) => {
+                      const isSelected = newRentType === item.key;
+                      return (
+                        <button
+                          key={item.key}
+                          type="button"
+                          onClick={() => setNewRentType(item.key)}
+                          className={`py-3 px-3 rounded-xl font-label-md text-label-md border transition-all ${
+                            isSelected
+                              ? "border-secondary bg-secondary/10 text-secondary font-bold shadow-sm"
+                              : "border-surface-variant bg-surface-container-low text-on-surface-variant hover:bg-surface-variant"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {calculatedDueDatePreview && (
+                  <div className="p-3.5 bg-secondary-container/30 border border-secondary/20 rounded-xl flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-secondary">
+                      <span className="material-symbols-outlined text-lg">event_available</span>
+                      <span className="font-label-sm text-label-sm">Estimasi Jatuh Tempo:</span>
+                    </div>
+                    <span className="font-body-md text-body-md font-bold text-primary">
+                      {calculatedDueDatePreview.toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                )}
 
                 <button
                   type="submit"
