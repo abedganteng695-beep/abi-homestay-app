@@ -3,7 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
+import { cookies } from "next/headers";
 import { sanitizePhoneDigits, formatPhoneDisplay } from "@/lib/phone";
+
 import { calculateDueDate, getRentAmount } from "@/lib/rent";
 
 // helper --------------------------------------------------------------------------
@@ -88,6 +90,11 @@ export async function updateRoomInventory(
   status: "AVAILABLE" | "OCCUPIED" | "MAINTENANCE"
 ) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses ubah data.");
+      return null;
+    }
     const updated = await prisma.room.update({
       where: { id: roomId },
       data: {
@@ -158,6 +165,11 @@ export async function getTenants(search: string = "", filter: string = "semua") 
 // end of helper ------------------------------------------------------------------
 export async function addTenant(formData: FormData) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses tambah penghuni.");
+      return null;
+    }
     const name = (formData.get("name") as string) || "Penghuni Baru";
     const phoneRaw = (formData.get("phone") as string) || "-";
     const phone = phoneRaw !== "-" ? formatPhoneDisplay(phoneRaw) : "-";
@@ -232,6 +244,11 @@ export async function addTenant(formData: FormData) {
 // end of helper ------------------------------------------------------------------
 export async function deleteTenant(tenantId: string) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses hapus penghuni.");
+      return false;
+    }
     const tenant = await prisma.tenant.findUnique({
       where: { id: tenantId },
     });
@@ -287,6 +304,11 @@ export async function getTransactions() {
 // end of helper ------------------------------------------------------------------
 export async function addTransaction(formData: FormData) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses catat transaksi.");
+      return null;
+    }
     const tenantId = (formData.get("tenantId") as string) || "";
     const type = (formData.get("type") as any) || "INCOME";
     const rawRentType = formData.get("rentType") as string;
@@ -410,6 +432,11 @@ export async function updatePricing(
   yearlyPrice: number
 ) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses ubah harga.");
+      return null;
+    }
     let pricing = await prisma.pricing.findFirst();
     if (!pricing) {
       pricing = await prisma.pricing.create({
@@ -446,6 +473,11 @@ export async function updatePricing(
 // end of helper ------------------------------------------------------------------
 export async function updateSetting(settingId: string, autoWhatsappReminders: boolean) {
   try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses ubah pengaturan.");
+      return null;
+    }
     let setting = await prisma.setting.findFirst();
     if (!setting) {
       setting = await prisma.setting.create({
@@ -468,3 +500,130 @@ export async function updateSetting(settingId: string, autoWhatsappReminders: bo
     return null;
   }
 }
+
+// helper --------------------------------------------------------------------------
+// function untuk membuat akun pengguna bawaan jika database masih kosong
+// input param : none
+// output : boolean success
+// end of helper ------------------------------------------------------------------
+export async function seedUsers() {
+  try {
+    const count = await prisma.user.count();
+    if (count === 0) {
+      await prisma.user.createMany({
+        data: [
+          {
+            username: "admin",
+            name: "System Administrator",
+            password: "admin123",
+            role: "ADMIN",
+            status: true,
+          },
+          {
+            username: "edit",
+            name: "Operator Edit",
+            password: "edit123",
+            role: "EDIT",
+            status: true,
+          },
+          {
+            username: "view",
+            name: "Pengamat View",
+            password: "view123",
+            role: "VIEW",
+            status: true,
+          },
+        ],
+      });
+    }
+    return true;
+  } catch (error) {
+    console.error("Error in seedUsers:", error);
+    return false;
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk memproses login pengguna dan menyimpan sesi dalam cookie
+// input param : formData (FormData)
+// output : object { success: boolean, message?: string, user?: object }
+// end of helper ------------------------------------------------------------------
+export async function loginUser(formData: FormData) {
+  try {
+    await seedUsers();
+    const username = (formData.get("username") as string || "").trim();
+    const password = (formData.get("password") as string || "").trim();
+
+    if (!username || !password) {
+      return { success: false, message: "Username dan password wajib diisi." };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (!user || user.password !== password) {
+      return { success: false, message: "Username atau password tidak valid." };
+    }
+
+    if (!user.status) {
+      return { success: false, message: "Akun ini telah dinonaktifkan." };
+    }
+
+    const sessionData = {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      role: user.role,
+    };
+
+    const cookieStore = await cookies();
+    cookieStore.set("abi_session", JSON.stringify(sessionData), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7, // 7 hari
+      path: "/",
+    });
+
+    return { success: true, user: sessionData };
+  } catch (error) {
+    console.error("Error in loginUser:", error);
+    return { success: false, message: "Terjadi kesalahan pada server." };
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk memproses logout dan menghapus cookie sesi
+// input param : none
+// output : boolean success
+// end of helper ------------------------------------------------------------------
+export async function logoutUser() {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete("abi_session");
+    return true;
+  } catch (error) {
+    console.error("Error in logoutUser:", error);
+    return false;
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk mengambil data pengguna yang sedang login dari cookie sesi
+// input param : none
+// output : object sessionData | null
+// end of helper ------------------------------------------------------------------
+export async function getCurrentUser() {
+  try {
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("abi_session");
+    if (!sessionCookie || !sessionCookie.value) {
+      return null;
+    }
+    return JSON.parse(sessionCookie.value);
+  } catch (error) {
+    console.error("Error in getCurrentUser:", error);
+    return null;
+  }
+}
+

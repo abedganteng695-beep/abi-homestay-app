@@ -1,17 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getCurrentUser, logoutUser } from "@/app/actions";
+
+interface UserSession {
+  id: string;
+  username: string;
+  name: string;
+  role: "ADMIN" | "EDIT" | "VIEW";
+}
 
 // helper --------------------------------------------------------------------------
-// function untuk menampilkan navigasi aplikasi (TopAppBar, BottomNavBar, SideNav)
-// input param : none (menggunakan hook usePathname)
+// function untuk menampilkan navigasi aplikasi (TopAppBar, BottomNavBar, SideNav, Profil & Logout)
+// input param : none
 // output : React component JSX Navigasi
 // end of helper ------------------------------------------------------------------
 export default function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
   const [formattedDate, setFormattedDate] = useState("Senin, 24 Mei 2024");
+  const [currentUser, setCurrentUser] = useState<UserSession | null>(null);
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = {
@@ -22,7 +32,25 @@ export default function Navigation() {
     };
     const today = new Date().toLocaleDateString("id-ID", options);
     setFormattedDate(today);
-  }, []);
+
+    // Memuat profil pengguna aktif dari cookie sesi
+    getCurrentUser().then((user) => {
+      if (user) {
+        setCurrentUser(user);
+      }
+    });
+  }, [pathname]);
+
+  // helper --------------------------------------------------------------------------
+  // function untuk menangani aksi logout pengguna
+  // input param : none
+  // output : void (menghapus cookie dan mengarahkan ke /login)
+  // end of helper ------------------------------------------------------------------
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/login");
+    router.refresh();
+  };
 
   const navItems = [
     { label: "Beranda", href: "/", icon: "home" },
@@ -47,6 +75,17 @@ export default function Navigation() {
     }
   };
 
+  const getRoleBadgeStyle = (role?: string) => {
+    switch (role) {
+      case "ADMIN":
+        return "bg-primary-container text-on-primary-fixed-variant border-primary-fixed-dim/40";
+      case "EDIT":
+        return "bg-secondary-container/40 text-secondary border-secondary/30";
+      default:
+        return "bg-surface-container-high text-outline border-outline-variant/40";
+    }
+  };
+
   return (
     <>
       {/* TopAppBar (Mobile & Tablet) */}
@@ -61,18 +100,31 @@ export default function Navigation() {
             </p>
           </div>
         </div>
-        <button className="relative p-2 rounded-full hover:bg-surface-variant/20 transition-all duration-300 group">
-          <span className="material-symbols-outlined text-primary group-hover:text-secondary transition-colors duration-300" data-icon="notifications">
-            notifications
-          </span>
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface animate-pulse"></span>
-        </button>
+        <div className="flex items-center gap-2">
+          {currentUser && (
+            <div className="flex items-center gap-1.5 bg-surface-container/80 border border-outline-variant/40 px-2.5 py-1 rounded-full">
+              <span className="text-[11px] font-bold text-on-surface">
+                {currentUser.name}
+              </span>
+              <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border ${getRoleBadgeStyle(currentUser.role)}`}>
+                {currentUser.role}
+              </span>
+            </div>
+          )}
+          <button
+            onClick={handleLogout}
+            title="Keluar / Logout"
+            className="p-2 rounded-full hover:bg-error-container/40 text-error transition-all duration-300"
+          >
+            <span className="material-symbols-outlined text-xl">logout</span>
+          </button>
+        </div>
       </header>
 
       {/* Desktop SideNav */}
-      <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-surface shadow-sm z-40 pt-md px-4 pb-4">
+      <aside className="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 bg-surface shadow-sm z-40 pt-md px-4 pb-4 border-r border-outline-variant/30">
         <div className="flex items-center gap-2 mb-xl px-2">
-          <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center shadow-soft-teal">
             <span className="material-symbols-outlined text-white text-sm" data-icon="apartment">
               apartment
             </span>
@@ -81,6 +133,7 @@ export default function Navigation() {
             Abi Homestay
           </span>
         </div>
+
         <nav className="flex flex-col gap-2 flex-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -105,6 +158,42 @@ export default function Navigation() {
             );
           })}
         </nav>
+
+        {/* User Profile & Logout Box Footer */}
+        <div className="pt-4 border-t border-outline-variant/30">
+          {currentUser ? (
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20">
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <div className="w-9 h-9 rounded-full bg-secondary-container/40 flex items-center justify-center text-secondary font-bold text-sm shrink-0 border border-secondary/30">
+                  {currentUser.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-label-md font-bold text-on-surface truncate">
+                    {currentUser.name}
+                  </span>
+                  <span className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded border w-fit ${getRoleBadgeStyle(currentUser.role)}`}>
+                    {currentUser.role}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                title="Keluar aplikasi"
+                className="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container/30 transition-all shrink-0"
+              >
+                <span className="material-symbols-outlined text-lg">logout</span>
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-secondary text-on-secondary font-semibold rounded-xl text-label-md shadow-soft-teal hover:bg-on-secondary-fixed-variant transition-all"
+            >
+              <span className="material-symbols-outlined text-lg">login</span>
+              <span>Masuk Aplikasi</span>
+            </Link>
+          )}
+        </div>
       </aside>
 
       {/* BottomNavBar (Mobile) */}

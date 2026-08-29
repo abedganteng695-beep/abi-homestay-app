@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
+import AppLayoutWrapper from "@/components/AppLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Abi Homestay - Manajemen Kost Mudah",
@@ -32,11 +32,9 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-on-background min-h-screen pb-24 md:pb-0">
-        <Navigation />
-        <div className="md:pl-64 min-h-screen overflow-x-hidden w-full transition-all">
-          {children}
-        </div>
+        <AppLayoutWrapper>{children}</AppLayoutWrapper>
       </body>
     </html>
   );
 }
+
