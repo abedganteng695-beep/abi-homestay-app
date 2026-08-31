@@ -627,3 +627,155 @@ export async function getCurrentUser() {
   }
 }
 
+// helper --------------------------------------------------------------------------
+// function untuk mengambil daftar seluruh user (khusus ADMIN)
+// input param : none
+// output : array of User
+// end of helper ------------------------------------------------------------------
+export async function getUsers() {
+  try {
+    const user = await getCurrentUser();
+    if (!user || user.role !== "ADMIN") {
+      console.warn("Akses ditolak: Hanya ADMIN yang dapat melihat daftar user.");
+      return [];
+    }
+    return await prisma.user.findMany({
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error in getUsers:", error);
+    return [];
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk menambah user baru (khusus ADMIN)
+// input param : formData (FormData)
+// output : object { success: boolean, message?: string }
+// end of helper ------------------------------------------------------------------
+export async function createUser(formData: FormData) {
+  try {
+    const session = await getCurrentUser();
+    if (!session || session.role !== "ADMIN") {
+      return { success: false, message: "Akses ditolak: Anda tidak memiliki hak akses." };
+    }
+
+    const username = (formData.get("username") as string || "").trim();
+    const name = (formData.get("name") as string || "").trim();
+    const password = (formData.get("password") as string || "").trim();
+    const role = (formData.get("role") as any) || "VIEW";
+    const statusStr = formData.get("status") as string;
+    const status = statusStr === "true" || statusStr === "Aktif";
+
+    if (!username || !name || !password) {
+      return { success: false, message: "Semua kolom (Username, Nama, Password) wajib diisi." };
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { username } });
+    if (existingUser) {
+      return { success: false, message: "Username sudah terdaftar." };
+    }
+
+    await prisma.user.create({
+      data: {
+        username,
+        name,
+        password,
+        role,
+        status,
+      },
+    });
+
+    revalidatePath("/users");
+    return { success: true, message: "User berhasil ditambahkan." };
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    return { success: false, message: "Terjadi kesalahan pada server." };
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk mengubah data user (khusus ADMIN)
+// input param : formData (FormData)
+// output : object { success: boolean, message?: string }
+// end of helper ------------------------------------------------------------------
+export async function updateUser(formData: FormData) {
+  try {
+    const session = await getCurrentUser();
+    if (!session || session.role !== "ADMIN") {
+      return { success: false, message: "Akses ditolak: Anda tidak memiliki hak akses." };
+    }
+
+    const id = formData.get("id") as string;
+    if (!id) return { success: false, message: "ID User tidak valid." };
+
+    const name = (formData.get("name") as string || "").trim();
+    const password = (formData.get("password") as string || "").trim();
+    const role = (formData.get("role") as any) || "VIEW";
+    const statusStr = formData.get("status") as string;
+    const status = statusStr === "true" || statusStr === "Aktif";
+
+    if (!name) {
+      return { success: false, message: "Nama Lengkap wajib diisi." };
+    }
+
+    const updateData: any = {
+      name,
+      role,
+      status,
+    };
+
+    if (password) {
+      updateData.password = password;
+    }
+
+    await prisma.user.update({
+      where: { id },
+      data: updateData,
+    });
+
+    revalidatePath("/users");
+    return { success: true, message: "User berhasil diperbarui." };
+  } catch (error) {
+    console.error("Error in updateUser:", error);
+    return { success: false, message: "Terjadi kesalahan pada server." };
+  }
+}
+
+// helper --------------------------------------------------------------------------
+// function untuk menghapus user (khusus ADMIN)
+// input param : userId (string)
+// output : object { success: boolean, message?: string }
+// end of helper ------------------------------------------------------------------
+export async function deleteUser(userId: string) {
+  try {
+    const session = await getCurrentUser();
+    if (!session || session.role !== "ADMIN") {
+      return { success: false, message: "Akses ditolak: Anda tidak memiliki hak akses." };
+    }
+
+    if (session.id === userId) {
+      return { success: false, message: "Anda tidak dapat menghapus akun Anda sendiri." };
+    }
+
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    revalidatePath("/users");
+    return { success: true, message: "User berhasil dihapus." };
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    return { success: false, message: "Terjadi kesalahan pada server." };
+  }
+}
+

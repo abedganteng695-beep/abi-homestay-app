@@ -70,6 +70,8 @@ export default function Navigation() {
         return "Laporan Keuangan";
       case "/pengaturan":
         return "Pengaturan";
+      case "/users":
+        return "Manajemen User";
       default:
         return "Beranda";
     }
@@ -157,6 +159,29 @@ export default function Navigation() {
               </Link>
             );
           })}
+
+          {currentUser?.role === "ADMIN" && (
+            <>
+              <div className="mt-4 mb-2 px-4">
+                <span className="text-[10px] font-bold text-outline tracking-widest uppercase">
+                  Administrator
+                </span>
+              </div>
+              <Link
+                href="/users"
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  pathname === "/users"
+                    ? "text-on-primary bg-primary font-semibold shadow-md"
+                    : "text-on-surface-variant hover:bg-surface-variant/50"
+                }`}
+              >
+                <span className="material-symbols-outlined" style={pathname === "/users" ? { fontVariationSettings: "'FILL' 1" } : {}}>
+                  manage_accounts
+                </span>
+                <span className="font-label-md text-label-md">Manajemen User</span>
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* User Profile & Logout Box Footer */}
