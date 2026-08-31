@@ -67,6 +67,18 @@ const config: Config = {
         "2xl": "1.5rem",
         full: "9999px",
       },
+      maxWidth: {
+        xs: "20rem",
+        sm: "24rem",
+        md: "28rem",
+        lg: "32rem",
+        xl: "36rem",
+        "2xl": "42rem",
+        "3xl": "48rem",
+        "4xl": "56rem",
+        "5xl": "64rem",
+        "container-max": "1200px",
+      },
       spacing: {
         lg: "40px",
         xs: "4px",
