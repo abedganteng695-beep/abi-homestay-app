@@ -120,8 +120,15 @@ export function parsePenghuniPaste(teks: string): HasilParsePenghuni {
     const nomor = idx + 1;
     const sel = pecahSel(teksBaris).map((s) => s.trim());
 
-    // Abai baris header jika baris pertama berisi "Nama" atau "Name"
-    if (idx === 0 && (sel[0].toLowerCase().includes("nama") || sel[0].toLowerCase().includes("name"))) {
+    // Abai baris header jika baris pertama berisi kata kunci header
+    const firstCellLower = sel[0].toLowerCase();
+    if (
+      idx === 0 &&
+      (firstCellLower.includes("nama") ||
+        firstCellLower.includes("name") ||
+        firstCellLower.includes("tenant") ||
+        firstCellLower.includes("penghuni"))
+    ) {
       return;
     }
 
@@ -144,12 +151,8 @@ export function parsePenghuniPaste(teks: string): HasilParsePenghuni {
     }
 
     const phoneDigits = sanitizePhoneDigits(phoneRaw);
-    if (!phoneDigits) {
-      hasil.masalah.push({ nomor, teks: teksBaris, alasan: "Nomor HP tidak valid / kosong" });
-      return;
-    }
+    const phone = phoneDigits ? formatPhoneDisplay(phoneDigits) : "-";
 
-    const phone = formatPhoneDisplay(phoneDigits);
     const dateIn = normalisasiTanggal(dateInRaw);
     const rentType = normalisasiRentType(rentTypeRaw);
     const rentAmount = bacaAngka(amountRaw) ?? undefined;

@@ -238,7 +238,7 @@ export async function addTenant(formData: FormData) {
 }
 
 // helper --------------------------------------------------------------------------
-// function untuk menambah banyak data penghuni sekaligus (bulk import)
+// function untuk menambah banyak data penghuni sekaligus (bulk import teroptimasi)
 // input param : tenantsData (array of object)
 // output : object { success: boolean, count: number, message?: string }
 // end of helper ------------------------------------------------------------------
@@ -255,68 +255,101 @@ export async function importTenantsBulk(tenantsData: any[]) {
     }
 
     const pricing = await prisma.pricing.findFirst();
-    let importedCount = 0;
 
-    for (const item of tenantsData) {
+    // 1. Sanitasi & persiapkan data di memori
+    const preparedList = tenantsData.map((item) => {
       const name = item.name || "Penghuni Baru";
       const phoneDigits = sanitizePhoneDigits(item.phone || "");
       const phone = phoneDigits ? formatPhoneDisplay(phoneDigits) : "-";
       const roomNumberDigits = (item.roomNumber || "").replace(/[^0-9]/g, "");
       const roomNumber = roomNumberDigits ? roomNumberDigits.padStart(2, "0") : "01";
 
-      const dateIn = item.dateIn ? new Date(item.dateIn) : new Date();
+      const rawDate = item.dateIn ? new Date(item.dateIn) : new Date();
+      const dateIn = !isNaN(rawDate.getTime()) ? rawDate : new Date();
       const rentType = item.rentType || "MONTHLY";
       const dateDue = calculateDueDate(dateIn, rentType);
       const rentAmount = item.rentAmount ?? getRentAmount(rentType, pricing);
 
-      let room = await prisma.room.findFirst({
-        where: { number: roomNumber },
-      });
+      return {
+        name,
+        phone,
+        roomNumber,
+        dateIn,
+        rentType,
+        dateDue,
+        rentAmount,
+      };
+    });
 
-      if (!room) {
-        room = await prisma.room.create({
-          data: {
-            number: roomNumber,
-            status: "OCCUPIED",
+    // 2. Ambil seluruh kamar yang relevan dalam 1 kueri tunggal
+    const uniqueRoomNumbers = Array.from(new Set(preparedList.map((p) => p.roomNumber)));
+    const existingRooms = await prisma.room.findMany({
+      where: { number: { in: uniqueRoomNumbers } },
+    });
+
+    const roomMap = new Map<string, string>();
+    existingRooms.forEach((r) => roomMap.set(r.number, r.id));
+
+    // 3. Buat kamar baru yang belum ada di database secara efisien
+    const missingRoomNumbers = uniqueRoomNumbers.filter((num) => !roomMap.has(num));
+    if (missingRoomNumbers.length > 0) {
+      await Promise.all(
+        missingRoomNumbers.map(async (num) => {
+          const newRoom = await prisma.room.create({
+            data: {
+              number: num,
+              status: "OCCUPIED",
+            },
+          });
+          roomMap.set(num, newRoom.id);
+        })
+      );
+    }
+
+    // 4. Update status seluruh kamar yang sudah ada menjadi OCCUPIED dalam 1 batch
+    const existingRoomIds = existingRooms.map((r) => r.id);
+    if (existingRoomIds.length > 0) {
+      await prisma.room.updateMany({
+        where: { id: { in: existingRoomIds } },
+        data: { status: "OCCUPIED" },
+      });
+    }
+
+    // 5. Eksekusi upsert seluruh data penghuni secara paralel
+    await Promise.all(
+      preparedList.map((item) => {
+        const roomId = roomMap.get(item.roomNumber);
+        if (!roomId) return Promise.resolve();
+
+        return prisma.tenant.upsert({
+          where: { roomId },
+          create: {
+            name: item.name,
+            phone: item.phone,
+            roomId,
+            status: "ACTIVE",
+            dateIn: item.dateIn,
+            dateDue: item.dateDue,
+            rentType: item.rentType as any,
+            rentAmount: item.rentAmount,
+          },
+          update: {
+            name: item.name,
+            phone: item.phone,
+            status: "ACTIVE",
+            dateIn: item.dateIn,
+            dateDue: item.dateDue,
+            rentType: item.rentType as any,
+            rentAmount: item.rentAmount,
           },
         });
-      } else {
-        await prisma.room.update({
-          where: { id: room.id },
-          data: { status: "OCCUPIED" },
-        });
-      }
-
-      await prisma.tenant.upsert({
-        where: { roomId: room.id },
-        create: {
-          name,
-          phone,
-          roomId: room.id,
-          status: "ACTIVE",
-          dateIn,
-          dateDue,
-          rentType: rentType as any,
-          rentAmount,
-        },
-        update: {
-          name,
-          phone,
-          status: "ACTIVE",
-          dateIn,
-          dateDue,
-          rentType: rentType as any,
-          rentAmount,
-        },
-      });
-
-      importedCount++;
-    }
+      })
+    );
 
     revalidatePath("/penghuni");
     revalidatePath("/kamar");
     revalidatePath("/");
-    return { success: true, count: importedCount };
+    return { success: true, count: preparedList.length };
   } catch (error) {
     console.error("Error in importTenantsBulk:", error);
     return { success: false, count: 0, message: "Gagal memproses impor ke database." };
