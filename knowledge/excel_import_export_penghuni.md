@@ -1,29 +1,20 @@
-# Knowledge: Export & Import Excel Data Penghuni
+# Knowledge: Export & Import Excel & CSV Data Penghuni
 
-## Reference: Lancar Jaya Printing (`paste-varian.ts`)
-Di project `lancarjayaprinting` (`lancarjaya-web/apps/admin/src/lib/catalog/paste-varian.ts`), fitur impor produk dilakukan dengan pendekatan **Tempel Spreadsheet (TSV/CSV)** tanpa dependency berat:
-1. Pengguna melakukan Copy (Ctrl+C) dari Excel / Google Sheets.
-2. Pengguna menempelkan (Ctrl+V) teks mentah ke modal/area input.
-3. Parser memisah sel berdasarkan tab (`\t`), titik-koma (`;`), atau koma (`,`).
-4. Fungsi `bacaAngka` membasmi simbol mata uang (`Rp`), spasi, dan format angka desimal.
-5. Menghasilkan daftar data valid dan daftar baris bermasalah (error log per baris) sebelum disimpan ke database.
-
-## Adaptasi untuk ABI Homestay (`penghuni`)
-Data Penghuni di `abi-homestay-app` (`Tenant` model) memiliki struktur:
-- **Nama** (`name`: string) - wajib
-- **Nomor Kamar** (`roomNumber`: string) - wajib (misal: "01", "15")
-- **Nomor HP** (`phone`: string) - wajib (misal: "08123456789" -> diformat ke `+62 812-3456-789`)
-- **Tanggal Masuk** (`dateIn`: Date) - opsional (default: hari ini)
-- **Tipe Sewa** (`rentType`: `MONTHLY` | `YEARLY` | `SEMESTERLY` | `DAILY`) - opsional (default: `MONTHLY`)
-- **Harga Sewa** (`rentAmount`: number) - opsional (auto dari `Pricing` master jika kosong)
+## Reference: Lancar Jaya Printing (`paste-varian.ts`) & SheetJS (`xlsx`)
+Di project `lancarjayaprinting` (`lancarjaya-web/apps/admin/src/lib/catalog/paste-varian.ts`), impor data produk menggunakan pendekatan **Tempel Spreadsheet (TSV/CSV)**.
+Pada `abi-homestay-app`, kemampuan ini ditingkatkan dengan penambahan pustaka `xlsx` (SheetJS) untuk mendukung file **Excel (.xlsx, .xls)** dan **CSV (.csv, .tsv)** secara simultan.
 
 ## Fitur Export
-- Ekspor daftar penghuni aktif/semua ke format CSV / Excel-compatible TSV dengan header:
-  `Nama, Nomor Kamar, Nomor HP, Tanggal Masuk, Jatuh Tempo, Tipe Sewa, Status, Harga Sewa`
-- Dapat diunduh langsung via browser tanpa backend tambahan (menggunakan Blob & HTML5 download link) atau via Server Action.
+- Pengguna dapat memilih format ekspor:
+  1. **Format Excel (`.xlsx`)**: File spreadsheet resmi Microsoft Excel dengan sheet "Penghuni".
+  2. **Format CSV (`.csv`)**: File teks dipisah koma dengan UTF-8 BOM (`\uFEFF`) agar tidak berantakan di Excel.
 
 ## Fitur Import
-- **Mode 1**: Tempel Langsung Teks Spreadsheet (Paste TSV/CSV dari Excel/Google Sheets).
-- **Mode 2**: Unggah File `.csv` / `.xlsx` (menggunakan parser CSV/Excel browser murni).
-- Validasi instan di UI dengan pratinjau "N data terbaca, M data bermasalah".
-- Opsi simpan massal (bulk insert/upsert) ke database via Server Action `importTenantsBulk`.
+- **Mendukung 2 Format Sekaligus**:
+  - **Unggah File**: Pengguna dapat mengunggah file `.xlsx`, `.xls`, `.csv`, `.tsv`, atau `.txt`. Modul `parseFileToTableText` otomatis membaca file tersebut di browser dan memisahkan kolomnya.
+  - **Tempel Spreadsheet**: Pengguna dapat menyalin tabel dari Excel / Google Sheets (Ctrl+C) dan menempelkan langsung (Ctrl+V).
+- **Validasi Otomatis Live**:
+  - `bacaAngka` membasmi simbol mata uang (`Rp`), spasi, dan titik desimal.
+  - `sanitizePhoneDigits` & `formatPhoneDisplay` menstandarkan nomor HP ke format `+62 8xx-xxxx-xxxx`.
+  - `normalisasiRentType` & `normalisasiTanggal` mengonversi tipe sewa (`Bulanan`, `Tahunan`, `Per Semester`, `Per Hari`) dan format tanggal.
+  - Menampilkan jumlah baris valid dan log kesalahan per baris jika ada data yang kosong/salah.
