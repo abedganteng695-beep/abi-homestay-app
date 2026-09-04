@@ -17,7 +17,7 @@ interface ImportExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   tenants: TenantExportData[];
-  onSuccess: () => void;
+  onSuccess: () => void | Promise<void>;
 }
 
 // helper --------------------------------------------------------------------------
@@ -72,7 +72,7 @@ export default function ImportExportModal({ isOpen, onClose, tenants, onSuccess 
   };
 
   // helper --------------------------------------------------------------------------
-  // function untuk memproses penyimpanan massal data hasil impor ke database
+  // function untuk memproses penyimpanan massal data hasil impor ke database & auto close
   // input param : none
   // output : void
   // end of helper ------------------------------------------------------------------
@@ -88,7 +88,11 @@ export default function ImportExportModal({ isOpen, onClose, tenants, onSuccess 
         });
         setRawText("");
         setParseResult(null);
-        onSuccess();
+        await onSuccess();
+        setTimeout(() => {
+          onClose();
+          setStatusMessage(null);
+        }, 1000);
       } else {
         setStatusMessage({
           type: "error",

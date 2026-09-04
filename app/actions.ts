@@ -258,7 +258,7 @@ export async function importTenantsBulk(tenantsData: any[]) {
 
     // 1. Sanitasi & persiapkan data di memori
     const preparedList = tenantsData.map((item) => {
-      const name = item.name || "Penghuni Baru";
+      const name = (item.name || "Penghuni Baru").trim();
       const phoneDigits = sanitizePhoneDigits(item.phone || "");
       const phone = phoneDigits ? formatPhoneDisplay(phoneDigits) : "-";
       const roomNumberDigits = (item.roomNumber || "").replace(/[^0-9]/g, "");
@@ -281,8 +281,15 @@ export async function importTenantsBulk(tenantsData: any[]) {
       };
     });
 
-    // 2. Ambil seluruh kamar yang relevan dalam 1 kueri tunggal
-    const uniqueRoomNumbers = Array.from(new Set(preparedList.map((p) => p.roomNumber)));
+    // 2. Dekode data unik per nomor kamar (mencegah bentrok E11000 duplicate key pada roomId_1)
+    const tenantByRoomMap = new Map<string, (typeof preparedList)[0]>();
+    preparedList.forEach((item) => {
+      tenantByRoomMap.set(item.roomNumber, item);
+    });
+    const uniqueTenants = Array.from(tenantByRoomMap.values());
+    const uniqueRoomNumbers = Array.from(tenantByRoomMap.keys());
+
+    // 3. Ambil kamar yang sudah ada
     const existingRooms = await prisma.room.findMany({
       where: { number: { in: uniqueRoomNumbers } },
     });
@@ -290,23 +297,18 @@ export async function importTenantsBulk(tenantsData: any[]) {
     const roomMap = new Map<string, string>();
     existingRooms.forEach((r) => roomMap.set(r.number, r.id));
 
-    // 3. Buat kamar baru yang belum ada di database secara efisien
+    // 4. Buat kamar baru untuk yang belum ada di database
     const missingRoomNumbers = uniqueRoomNumbers.filter((num) => !roomMap.has(num));
-    if (missingRoomNumbers.length > 0) {
-      await Promise.all(
-        missingRoomNumbers.map(async (num) => {
-          const newRoom = await prisma.room.create({
-            data: {
-              number: num,
-              status: "OCCUPIED",
-            },
-          });
-          roomMap.set(num, newRoom.id);
-        })
-      );
+    for (const num of missingRoomNumbers) {
+      const newRoom = await prisma.room.upsert({
+        where: { number: num },
+        create: { number: num, status: "OCCUPIED" },
+        update: { status: "OCCUPIED" },
+      });
+      roomMap.set(num, newRoom.id);
     }
 
-    // 4. Update status seluruh kamar yang sudah ada menjadi OCCUPIED dalam 1 batch
+    // 5. Update status seluruh kamar yang sudah ada menjadi OCCUPIED
     const existingRoomIds = existingRooms.map((r) => r.id);
     if (existingRoomIds.length > 0) {
       await prisma.room.updateMany({
@@ -315,44 +317,46 @@ export async function importTenantsBulk(tenantsData: any[]) {
       });
     }
 
-    // 5. Eksekusi upsert seluruh data penghuni secara paralel
-    await Promise.all(
-      preparedList.map((item) => {
-        const roomId = roomMap.get(item.roomNumber);
-        if (!roomId) return Promise.resolve();
+    // 6. Eksekusi upsert seluruh data penghuni secara aman
+    for (const item of uniqueTenants) {
+      const roomId = roomMap.get(item.roomNumber);
+      if (!roomId) continue;
 
-        return prisma.tenant.upsert({
-          where: { roomId },
-          create: {
-            name: item.name,
-            phone: item.phone,
-            roomId,
-            status: "ACTIVE",
-            dateIn: item.dateIn,
-            dateDue: item.dateDue,
-            rentType: item.rentType as any,
-            rentAmount: item.rentAmount,
-          },
-          update: {
-            name: item.name,
-            phone: item.phone,
-            status: "ACTIVE",
-            dateIn: item.dateIn,
-            dateDue: item.dateDue,
-            rentType: item.rentType as any,
-            rentAmount: item.rentAmount,
-          },
-        });
-      })
-    );
+      await prisma.tenant.upsert({
+        where: { roomId },
+        create: {
+          name: item.name,
+          phone: item.phone,
+          roomId,
+          status: "ACTIVE",
+          dateIn: item.dateIn,
+          dateDue: item.dateDue,
+          rentType: item.rentType as any,
+          rentAmount: item.rentAmount,
+        },
+        update: {
+          name: item.name,
+          phone: item.phone,
+          status: "ACTIVE",
+          dateIn: item.dateIn,
+          dateDue: item.dateDue,
+          rentType: item.rentType as any,
+          rentAmount: item.rentAmount,
+        },
+      });
+    }
 
     revalidatePath("/penghuni");
     revalidatePath("/kamar");
     revalidatePath("/");
-    return { success: true, count: preparedList.length };
-  } catch (error) {
+    return { success: true, count: uniqueTenants.length };
+  } catch (error: any) {
     console.error("Error in importTenantsBulk:", error);
-    return { success: false, count: 0, message: "Gagal memproses impor ke database." };
+    return {
+      success: false,
+      count: 0,
+      message: `Gagal memproses impor: ${error?.message || "Terjadi kesalahan pada server database."}`,
+    };
   }
 }
 

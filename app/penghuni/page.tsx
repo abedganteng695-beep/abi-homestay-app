@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { getTenants, addTenant, deleteTenant } from "../actions";
 import { sanitizePhoneDigits, formatPhoneDisplay, formatLiveInputPhone, getWhatsAppUrl } from "@/lib/phone";
 import { calculateDueDate, formatRentTypeLabel } from "@/lib/rent";
@@ -30,6 +31,7 @@ interface Tenant {
 // output : React Client Component JSX
 // end of helper ------------------------------------------------------------------
 export default function PenghuniPage() {
+  const router = useRouter();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("semua");
@@ -59,6 +61,11 @@ export default function PenghuniPage() {
   const fetchTenants = async () => {
     const data = await getTenants(search, filter);
     setTenants(data as unknown as Tenant[]);
+  };
+
+  const handleImportSuccess = async () => {
+    await fetchTenants();
+    router.refresh();
   };
 
   const handleAddSubmit = (e: React.FormEvent) => {
@@ -467,7 +474,7 @@ export default function PenghuniPage() {
         isOpen={isImportExportOpen}
         onClose={() => setIsImportExportOpen(false)}
         tenants={tenants}
-        onSuccess={fetchTenants}
+        onSuccess={handleImportSuccess}
       />
     </main>
   );
