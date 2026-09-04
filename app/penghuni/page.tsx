@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition, useMemo } from "react";
 import { getTenants, addTenant, deleteTenant } from "../actions";
 import { sanitizePhoneDigits, formatPhoneDisplay, formatLiveInputPhone, getWhatsAppUrl } from "@/lib/phone";
 import { calculateDueDate, formatRentTypeLabel } from "@/lib/rent";
+import ImportExportModal from "@/components/penghuni/ImportExportModal";
 
 interface Room {
   id: string;
@@ -34,6 +35,7 @@ export default function PenghuniPage() {
   const [filter, setFilter] = useState("semua");
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isImportExportOpen, setIsImportExportOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   // Form states
@@ -100,6 +102,25 @@ export default function PenghuniPage() {
             Pengelolaan Data Penghuni &amp; Masa Sewa
           </p>
         </div>
+        <button
+          onClick={() => setIsImportExportOpen(true)}
+          className="px-4 py-2.5 bg-brand-teal/10 text-brand-teal hover:bg-brand-teal/20 rounded-xl font-label-md text-sm font-bold flex items-center gap-2 transition-all active:scale-95 border border-brand-teal/20 shadow-sm"
+        >
+          <span className="material-symbols-outlined text-xl">table_chart</span>
+          Export / Import Excel
+        </button>
+      </div>
+
+      {/* Mobile Top Action Bar */}
+      <div className="md:hidden flex items-center justify-between mb-4">
+        <h1 className="font-headline-md text-headline-md text-primary font-bold">Daftar Penghuni</h1>
+        <button
+          onClick={() => setIsImportExportOpen(true)}
+          className="px-3 py-1.5 bg-brand-teal/10 text-brand-teal rounded-lg font-label-sm text-xs font-bold flex items-center gap-1 border border-brand-teal/20"
+        >
+          <span className="material-symbols-outlined text-sm">table_chart</span>
+          Excel
+        </button>
       </div>
 
       {/* Header & Search */}
@@ -440,6 +461,14 @@ export default function PenghuniPage() {
           </div>
         </div>
       )}
+
+      {/* Modal Import Export Excel */}
+      <ImportExportModal
+        isOpen={isImportExportOpen}
+        onClose={() => setIsImportExportOpen(false)}
+        tenants={tenants}
+        onSuccess={fetchTenants}
+      />
     </main>
   );
 }

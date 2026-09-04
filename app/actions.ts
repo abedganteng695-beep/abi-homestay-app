@@ -238,6 +238,93 @@ export async function addTenant(formData: FormData) {
 }
 
 // helper --------------------------------------------------------------------------
+// function untuk menambah banyak data penghuni sekaligus (bulk import)
+// input param : tenantsData (array of object)
+// output : object { success: boolean, count: number, message?: string }
+// end of helper ------------------------------------------------------------------
+export async function importTenantsBulk(tenantsData: any[]) {
+  try {
+    const user = await getCurrentUser();
+    if (user && user.role === "VIEW") {
+      console.warn("Akses ditolak: User dengan role VIEW tidak memiliki akses impor data.");
+      return { success: false, count: 0, message: "Akses ditolak: Anda tidak memiliki izin mengimpor data." };
+    }
+
+    if (!Array.isArray(tenantsData) || tenantsData.length === 0) {
+      return { success: false, count: 0, message: "Data impor kosong." };
+    }
+
+    const pricing = await prisma.pricing.findFirst();
+    let importedCount = 0;
+
+    for (const item of tenantsData) {
+      const name = item.name || "Penghuni Baru";
+      const phoneDigits = sanitizePhoneDigits(item.phone || "");
+      const phone = phoneDigits ? formatPhoneDisplay(phoneDigits) : "-";
+      const roomNumberDigits = (item.roomNumber || "").replace(/[^0-9]/g, "");
+      const roomNumber = roomNumberDigits ? roomNumberDigits.padStart(2, "0") : "01";
+
+      const dateIn = item.dateIn ? new Date(item.dateIn) : new Date();
+      const rentType = item.rentType || "MONTHLY";
+      const dateDue = calculateDueDate(dateIn, rentType);
+      const rentAmount = item.rentAmount ?? getRentAmount(rentType, pricing);
+
+      let room = await prisma.room.findFirst({
+        where: { number: roomNumber },
+      });
+
+      if (!room) {
+        room = await prisma.room.create({
+          data: {
+            number: roomNumber,
+            status: "OCCUPIED",
+          },
+        });
+      } else {
+        await prisma.room.update({
+          where: { id: room.id },
+          data: { status: "OCCUPIED" },
+        });
+      }
+
+      await prisma.tenant.upsert({
+        where: { roomId: room.id },
+        create: {
+          name,
+          phone,
+          roomId: room.id,
+          status: "ACTIVE",
+          dateIn,
+          dateDue,
+          rentType: rentType as any,
+          rentAmount,
+        },
+        update: {
+          name,
+          phone,
+          status: "ACTIVE",
+          dateIn,
+          dateDue,
+          rentType: rentType as any,
+          rentAmount,
+        },
+      });
+
+      importedCount++;
+    }
+
+    revalidatePath("/penghuni");
+    revalidatePath("/kamar");
+    revalidatePath("/");
+    return { success: true, count: importedCount };
+  } catch (error) {
+    console.error("Error in importTenantsBulk:", error);
+    return { success: false, count: 0, message: "Gagal memproses impor ke database." };
+  }
+}
+
+
+// helper --------------------------------------------------------------------------
 // function untuk menghapus penghuni
 // input param : tenantId (string)
 // output : boolean success
